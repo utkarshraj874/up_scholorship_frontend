@@ -1,5 +1,13 @@
-// API client for UP Scholarship Portal (Completed Backend Modules: User, Profile, Documents)
-const API_BASE = "http://localhost:8000";
+// Backend API base URL: configurable via VITE_API_URL / VITE_API_BASE_URL env variables,
+// falling back to deployed Render backend URL in production, or localhost in development.
+const rawApiBase =
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD
+    ? "https://utkarshraj874-up-scholorship-backend.onrender.com"
+    : "http://localhost:8000");
+
+export const API_BASE = rawApiBase.replace(/\/+$/, "");
 
 function getHeaders(isFormData = false) {
   const headers = {};
