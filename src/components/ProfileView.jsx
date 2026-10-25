@@ -10,12 +10,19 @@ export default function ProfileView({ user, onShowToast }) {
     department: 'Computer Science and Engineering',
     semester: 1,
     phone_no: '',
+    aadhaar_no: '',
     tenth_percentage: '',
     twelfth_percentage: '',
     family_income: '',
     semester_result: '',
   });
 
+  // Duplicate state declarations removed – kept later definitions
+
+  // Validation errors for client‑side checks
+  const [validationErrors, setValidationErrors] = useState({});
+
+  // Loading, saving, and profile existence flags
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
@@ -36,6 +43,7 @@ export default function ProfileView({ user, onShowToast }) {
           department: data.department || 'Computer Science and Engineering',
           semester: data.semester || 1,
           phone_no: data.phone_no || '',
+          aadhaar_no: data.aadhaar_no || '',
           tenth_percentage: data.tenth_percentage ?? '',
           twelfth_percentage: data.twelfth_percentage ?? '',
           family_income: data.family_income ?? '',
