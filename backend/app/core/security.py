@@ -59,7 +59,6 @@ def create_acess_token(data:dict):
      return encoded_jwt
 
 def verify_acess_token(token:str):
-    print("token ka vale", token)
     try:
         payload = jwt.decode(
             token,
