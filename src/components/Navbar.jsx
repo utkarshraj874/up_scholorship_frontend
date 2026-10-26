@@ -1,16 +1,34 @@
-import React from 'react';
+import { useState } from 'react';
 import {
-  GraduationCap,
-  User,
-  FileText,
   BookOpen,
-  LogOut,
+  FileText,
+  GraduationCap,
   LogIn,
-  ShieldCheck,
+  LogOut,
+  Menu,
   MessageSquare,
+  ShieldCheck,
+  User,
   Users,
+  X,
+  Bot,
 } from 'lucide-react';
 import NotificationDropdown from './NotificationDropdown';
+
+const studentNavigation = [
+  { id: 'profile', label: 'Student profile', icon: User },
+  { id: 'documents', label: 'Document vault', icon: FileText },
+  { id: 'help', label: 'Help desk', icon: MessageSquare },
+  { id: 'guide', label: 'Application guide', icon: BookOpen },
+  { id: 'chat', label: 'Scholarship assistant', icon: Bot },
+];
+
+const adminNavigation = [
+  { id: 'admin', label: 'Student verification', icon: Users },
+  { id: 'help', label: 'Help desk', icon: MessageSquare },
+  { id: 'guide', label: 'Application guide', icon: BookOpen },
+  { id: 'chat', label: 'Scholarship assistant', icon: Bot },
+];
 
 export default function Navbar({
   user,
@@ -20,343 +38,128 @@ export default function Navbar({
   onLogout,
   onShowToast,
 }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
   const isAdmin = user?.role === 'admin';
+  const navigation = isAdmin ? adminNavigation : studentNavigation;
+
+  const selectTab = (tab) => {
+    setActiveTab(tab);
+    setMobileOpen(false);
+  };
 
   return (
-    <header
-      style={{
-        backgroundColor: '#0f172a',
-        color: '#ffffff',
-        borderBottom: '1px solid #1e293b',
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1280,
-          margin: '0 auto',
-          padding: '14px 20px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 16,
-        }}
-      >
-        {/* Brand */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: 10,
-              background: isAdmin
-                ? 'linear-gradient(135deg, #7c3aed, #4f46e5)'
-                : 'linear-gradient(135deg, #2563eb, #1d4ed8)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: isAdmin
-                ? '0 4px 12px rgba(124, 58, 237, 0.35)'
-                : '0 4px 12px rgba(37, 99, 235, 0.35)',
-            }}
-          >
-            {isAdmin ? <ShieldCheck size={26} color="#ffffff" /> : <GraduationCap size={26} color="#ffffff" />}
-          </div>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span
-                style={{
-                  fontSize: '1.15rem',
-                  fontWeight: 800,
-                  letterSpacing: '0.01em',
-                  color: '#ffffff',
-                }}
-              >
-                IIIT RANCHI
-              </span>
-              <span
-                style={{
-                  backgroundColor: isAdmin ? '#4c1d95' : '#1e3a8a',
-                  color: isAdmin ? '#ddd6fe' : '#93c5fd',
-                  fontSize: '0.72rem',
-                  fontWeight: 700,
-                  padding: '2px 8px',
-                  borderRadius: 9999,
-                  border: isAdmin ? '1px solid #7c3aed' : '1px solid #3b82f6',
-                }}
-              >
-                {isAdmin ? 'COORDINATOR DESK' : 'UP SCHOLARSHIP'}
-              </span>
-            </div>
-            <p style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 1 }}>
-              {isAdmin
-                ? 'Admin Verification & Student Facilitation Desk'
-                : 'Student Facilitation & Form Fill-up Portal (Outside State Scheme)'}
-            </p>
-          </div>
-        </div>
-
-        {/* User Info & Actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              {/* Notifications */}
-              <NotificationDropdown user={user} onShowToast={onShowToast} />
-
-              {/* User badge */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  backgroundColor: '#1e293b',
-                  padding: '6px 14px',
-                  borderRadius: 8,
-                  border: '1px solid #334155',
-                }}
-              >
-                <div
-                  style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: '50%',
-                    backgroundColor: isAdmin ? '#7c3aed' : '#2563eb',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '0.75rem',
-                    fontWeight: 700,
-                  }}
-                >
-                  {user.name ? user.name[0].toUpperCase() : 'U'}
-                </div>
-                <div style={{ textAlign: 'left' }}>
-                  <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#f8fafc', display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span>{user.name || (isAdmin ? 'Admin' : 'Student')}</span>
-                    {isAdmin && (
-                      <span
-                        style={{
-                          backgroundColor: '#4c1d95',
-                          color: '#c4b5fd',
-                          fontSize: '0.65rem',
-                          fontWeight: 700,
-                          padding: '1px 5px',
-                          borderRadius: 4,
-                        }}
-                      >
-                        Admin
-                      </span>
-                    )}
-                  </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
-                    {user.email}
-                  </div>
-                </div>
-              </div>
-
-              <button
-                onClick={onLogout}
-                className="btn btn-secondary"
-                style={{
-                  padding: '7px 12px',
-                  fontSize: '0.8rem',
-                  backgroundColor: '#334155',
-                  color: '#f8fafc',
-                  border: '1px solid #475569',
-                }}
-                title="Logout"
-              >
-                <LogOut size={15} />
-                <span>Logout</span>
-              </button>
-            </div>
-          ) : (
+    <>
+      <header className={`app-topbar${user ? ' app-topbar-authenticated' : ''}`}>
+        {user ? (
+          <>
             <button
-              onClick={onOpenAuth}
-              className="btn btn-primary"
-              style={{ padding: '8px 18px', fontSize: '0.86rem' }}
+              type="button"
+              className="icon-button mobile-menu-button"
+              onClick={() => setMobileOpen((open) => !open)}
+              aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={mobileOpen}
+              aria-controls="portal-sidebar"
             >
+              {mobileOpen ? <X size={21} /> : <Menu size={21} />}
+            </button>
+            <div className="mobile-brand">
+              <GraduationCap size={21} />
+              <span>Scholarship portal</span>
+            </div>
+          </>
+        ) : (
+          <>
+            <a className="guest-brand" href="/" aria-label="UP Scholarship Portal home">
+              <span className="brand-mark"><GraduationCap size={22} /></span>
+              <span>
+                <strong>UP Scholarship Portal</strong>
+                <small>IIIT Ranchi student facilitation</small>
+              </span>
+            </a>
+            <button type="button" className="btn btn-primary" onClick={onOpenAuth}>
               <LogIn size={16} />
               <span>Login / Register</span>
             </button>
+          </>
+        )}
+      </header>
+
+      {user && (
+        <>
+          {mobileOpen && (
+            <button
+              type="button"
+              className="sidebar-backdrop"
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close navigation menu"
+            />
           )}
-        </div>
-      </div>
+          <aside
+            id="portal-sidebar"
+            className={`app-sidebar${mobileOpen ? ' app-sidebar-open' : ''}`}
+            aria-label="Main navigation"
+          >
+            <div className="sidebar-brand">
+              <span className={`brand-mark${isAdmin ? ' brand-mark-admin' : ''}`}>
+                {isAdmin ? <ShieldCheck size={23} /> : <GraduationCap size={23} />}
+              </span>
+              <span className="sidebar-brand-copy">
+                <strong>IIIT Ranchi</strong>
+                <small>{isAdmin ? 'Coordinator desk' : 'UP Scholarship'}</small>
+              </span>
+              <button
+                type="button"
+                className="icon-button sidebar-close-button"
+                onClick={() => setMobileOpen(false)}
+                aria-label="Close navigation menu"
+              >
+                <X size={19} />
+              </button>
+            </div>
 
-      {/* Tabs Bar */}
-      <div
-        style={{
-          borderTop: '1px solid #1e293b',
-          backgroundColor: '#0b1120',
-        }}
-      >
-        <div
-          style={{
-            maxWidth: 1280,
-            margin: '0 auto',
-            padding: '0 20px',
-            display: 'flex',
-            gap: 4,
-            overflowX: 'auto',
-          }}
-        >
-          {isAdmin ? (
-            <>
-              <button
-                onClick={() => setActiveTab('admin')}
-                style={{
-                  padding: '12px 18px',
-                  fontSize: '0.88rem',
-                  fontWeight: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  border: 'none',
-                  background: 'transparent',
-                  color: activeTab === 'admin' ? '#a78bfa' : '#94a3b8',
-                  borderBottom: activeTab === 'admin' ? '2.5px solid #8b5cf6' : '2.5px solid transparent',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                <Users size={16} />
-                <span>Student Verification & Documents</span>
-              </button>
+            <div className="sidebar-section-label">Workspace</div>
+            <nav className="sidebar-navigation">
+              {navigation.map(({ id, label, icon: Icon }) => (
+                <button
+                  type="button"
+                  key={id}
+                  className={`sidebar-link${activeTab === id ? ' sidebar-link-active' : ''}`}
+                  onClick={() => selectTab(id)}
+                  aria-current={activeTab === id ? 'page' : undefined}
+                >
+                  <Icon size={18} aria-hidden="true" />
+                  <span>{label}</span>
+                </button>
+              ))}
+            </nav>
 
-              <button
-                onClick={() => setActiveTab('help')}
-                style={{
-                  padding: '12px 18px',
-                  fontSize: '0.88rem',
-                  fontWeight: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  border: 'none',
-                  background: 'transparent',
-                  color: activeTab === 'help' ? '#a78bfa' : '#94a3b8',
-                  borderBottom: activeTab === 'help' ? '2.5px solid #8b5cf6' : '2.5px solid transparent',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                <MessageSquare size={16} />
-                <span>Student Help Desk Queries</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('guide')}
-                style={{
-                  padding: '12px 18px',
-                  fontSize: '0.88rem',
-                  fontWeight: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  border: 'none',
-                  background: 'transparent',
-                  color: activeTab === 'guide' ? '#a78bfa' : '#94a3b8',
-                  borderBottom: activeTab === 'guide' ? '2.5px solid #8b5cf6' : '2.5px solid transparent',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                <BookOpen size={16} />
-                <span>Form Guidelines & Coordinator Notes</span>
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                onClick={() => setActiveTab('profile')}
-                style={{
-                  padding: '12px 18px',
-                  fontSize: '0.88rem',
-                  fontWeight: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  border: 'none',
-                  background: 'transparent',
-                  color: activeTab === 'profile' ? '#60a5fa' : '#94a3b8',
-                  borderBottom: activeTab === 'profile' ? '2.5px solid #3b82f6' : '2.5px solid transparent',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                <User size={16} />
-                <span>Student Profile</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('documents')}
-                style={{
-                  padding: '12px 18px',
-                  fontSize: '0.88rem',
-                  fontWeight: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  border: 'none',
-                  background: 'transparent',
-                  color: activeTab === 'documents' ? '#60a5fa' : '#94a3b8',
-                  borderBottom: activeTab === 'documents' ? '2.5px solid #3b82f6' : '2.5px solid transparent',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                <FileText size={16} />
-                <span>Document Vault</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('help')}
-                style={{
-                  padding: '12px 18px',
-                  fontSize: '0.88rem',
-                  fontWeight: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  border: 'none',
-                  background: 'transparent',
-                  color: activeTab === 'help' ? '#60a5fa' : '#94a3b8',
-                  borderBottom: activeTab === 'help' ? '2.5px solid #3b82f6' : '2.5px solid transparent',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                <MessageSquare size={16} />
-                <span>Help Desk / Ask Coordinator</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('guide')}
-                style={{
-                  padding: '12px 18px',
-                  fontSize: '0.88rem',
-                  fontWeight: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  border: 'none',
-                  background: 'transparent',
-                  color: activeTab === 'guide' ? '#60a5fa' : '#94a3b8',
-                  borderBottom: activeTab === 'guide' ? '2.5px solid #3b82f6' : '2.5px solid transparent',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                <BookOpen size={16} />
-                <span>Form Guidelines & Notes</span>
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-    </header>
+            <div className="sidebar-bottom">
+              <div className="sidebar-user">
+                <span className={`sidebar-avatar${isAdmin ? ' sidebar-avatar-admin' : ''}`}>
+                  {user.name?.trim()?.[0]?.toUpperCase() || 'U'}
+                </span>
+                <span className="sidebar-user-copy">
+                  <strong>{user.name || (isAdmin ? 'Coordinator' : 'Student')}</strong>
+                  <small>{user.email}</small>
+                </span>
+              </div>
+              <div className="sidebar-actions">
+                <div className="sidebar-notifications">
+                  <NotificationDropdown user={user} onShowToast={onShowToast} />
+                  <span>Notifications</span>
+                </div>
+                <button type="button" className="sidebar-logout" onClick={onLogout}>
+                  <LogOut size={17} />
+                  <span>Sign out</span>
+                </button>
+              </div>
+              <div className="sidebar-footnote">
+                {isAdmin ? 'Student facilitation & verification' : 'Student facilitation portal'}
+              </div>
+            </div>
+          </aside>
+        </>
+      )}
+    </>
   );
 }

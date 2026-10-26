@@ -302,7 +302,7 @@ export default function AdminView({ user, onShowToast }) {
             </p>
           </div>
 
-          <form onSubmit={handleSearch} style={{ display: 'flex', gap: 8 }}>
+          <form onSubmit={handleSearch} className="admin-search-form" style={{ display: 'flex', gap: 8 }}>
             <div style={{ position: 'relative' }}>
               <Search
                 size={16}
@@ -312,7 +312,7 @@ export default function AdminView({ user, onShowToast }) {
               <input
                 type="text"
                 className="form-input"
-                style={{ paddingLeft: 36, width: 260, fontSize: '0.85rem' }}
+                style={{ paddingLeft: 36, width: 260, maxWidth: '100%', fontSize: '0.85rem' }}
                 placeholder="Search by student name/email..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}

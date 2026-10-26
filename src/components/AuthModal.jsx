@@ -19,6 +19,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [info, setInfo] = useState(''); // success/info messages for forgot flow
+  const [otpSent, setOtpSent] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
@@ -29,6 +30,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
     setForgotData({ email: '', otp: '', newPassword: '' });
     setError('');
     setInfo('');
+    setOtpSent(false);
     setLoading(false);
     setShowPassword(false);
     setShowNewPassword(false);
@@ -79,10 +81,17 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
     setLoading(true);
     try {
       // Step 1: request OTP if we haven't sent it yet (otp field empty)
-      if (!forgotData.otp) {
+      if (!otpSent) {
         await api.forgotPassword(forgotData.email);
-        setInfo('OTP sent to your email (check console if email not configured).');
+        setOtpSent(true);
+        setInfo('If the email matches an account and delivery is configured, you will receive a reset code. Check your inbox or spam folder.');
       } else {
+        if (!/^\d{6}$/.test(forgotData.otp)) {
+          throw new Error('Enter the 6-digit reset code from your email.');
+        }
+        if (forgotData.newPassword.length < 6) {
+          throw new Error('Your new password must be at least 6 characters.');
+        }
         // Step 2: reset password using OTP and new password
         await api.resetPassword(forgotData.email, forgotData.otp, forgotData.newPassword);
         setInfo('Password reset successful. You can now log in.');
@@ -106,12 +115,15 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
 
   // Render helpers
   const renderPasswordToggle = (visible, setVisible) => (
-    <div
+    <button
+      type="button"
+      className="password-toggle"
       onClick={() => setVisible(!visible)}
-      style={{ position: 'absolute', right: 12, top: 12, cursor: 'pointer' }}
+      aria-label={visible ? 'Hide password' : 'Show password'}
+      aria-pressed={visible}
     >
       {visible ? <EyeOff size={16} /> : <Eye size={16} />}
-    </div>
+    </button>
   );
 
   const renderLoginRegisterForm = () => (
@@ -119,6 +131,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
       <div className="modal-body">
         {error && (
           <div
+            role="alert"
             style={{
               backgroundColor: '#fef2f2',
               border: '1px solid #fecaca',
@@ -265,7 +278,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
         )}
 
         {/* Quick Demo Credentials */}
-        {!isRegister && !mode === 'forgot' && (
+        {mode === 'login' && (
           <div>
             <div style={{ marginTop: 18, padding: '12px 14px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8 }}>
               <div style={{ fontSize: '0.78rem', fontWeight: 600, color: '#475569', marginBottom: 6 }}>Quick Fill Test Accounts:</div>
@@ -319,7 +332,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
         <button
           type="button"
           onClick={() => {
-            setMode(isRegister ? 'login' : 'register');
+            setMode(mode === 'register' ? 'login' : 'register');
             setError('');
           }}
           style={{
@@ -347,6 +360,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
       <div className="modal-body">
         {error && (
           <div
+            role="alert"
             style={{
               backgroundColor: '#fef2f2',
               border: '1px solid #fecaca',
@@ -366,6 +380,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
         )}
         {info && (
           <div
+            role="status"
             style={{
               backgroundColor: '#ecfdf5',
               border: '1px solid #a7f3d0',
@@ -391,12 +406,37 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
               placeholder="e.g. yourname@gmail.com"
               value={forgotData.email}
               onChange={(e) => setForgotData({ ...forgotData, email: e.target.value })}
+              readOnly={otpSent}
               required
             />
           </div>
         </div>
+        {otpSent && (
+          <button
+            type="button"
+            onClick={() => {
+              setForgotData({ email: '', otp: '', newPassword: '' });
+              setOtpSent(false);
+              setInfo('');
+              setError('');
+            }}
+            style={{
+              marginTop: -10,
+              marginBottom: 12,
+              padding: 0,
+              border: 0,
+              color: '#2563eb',
+              background: 'transparent',
+              fontSize: '0.82rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            Use a different email address
+          </button>
+        )}
         {/* If OTP has been sent, show OTP and new password fields */}
-        {info && forgotData.email && !forgotData.otp && (
+        {otpSent && (
           <>
             <div className="form-group" style={{ marginTop: 12 }}>
               <label className="form-label">OTP (sent to email)</label>
@@ -404,8 +444,11 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                 type="text"
                 className="form-input"
                 placeholder="6‑digit code"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                maxLength={6}
                 value={forgotData.otp}
-                onChange={(e) => setForgotData({ ...forgotData, otp: e.target.value })}
+                onChange={(e) => setForgotData({ ...forgotData, otp: e.target.value.replace(/\D/g, '').slice(0, 6) })}
                 required
               />
             </div>
@@ -435,6 +478,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
             setMode('login');
             setError('');
             setInfo('');
+            setOtpSent(false);
             setForgotData({ email: '', otp: '', newPassword: '' });
           }}
           style={{
@@ -449,7 +493,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
           Back to Login
         </button>
         <button type="submit" className="btn btn-primary" disabled={loading}>
-          <span>{loading ? 'Please wait...' : info && forgotData.otp ? 'Reset Password' : 'Send OTP'}</span>
+          <span>{loading ? 'Please wait...' : otpSent ? 'Reset Password' : 'Send reset code'}</span>
           <ArrowRight size={16} />
         </button>
       </div>

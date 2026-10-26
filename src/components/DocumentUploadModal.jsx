@@ -240,7 +240,7 @@ export default function DocumentUploadModal({
                     required
                   />
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: 12 }}>
                   <div className="form-group">
                     <label className="form-label">Board</label>
                     <select
@@ -293,7 +293,7 @@ export default function DocumentUploadModal({
                     required
                   />
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: 12 }}>
                   <div className="form-group">
                     <label className="form-label">Board</label>
                     <select
@@ -346,7 +346,7 @@ export default function DocumentUploadModal({
                     required
                   />
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: 12 }}>
                   <div className="form-group">
                     <label className="form-label">Issue Date</label>
                     <input
@@ -386,7 +386,7 @@ export default function DocumentUploadModal({
                     required
                   />
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: 12 }}>
                   <div className="form-group">
                     <label className="form-label">Issue Date</label>
                     <input
@@ -427,7 +427,7 @@ export default function DocumentUploadModal({
                     required
                   />
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: 12 }}>
                   <div className="form-group">
                     <label className="form-label">Issue Date</label>
                     <input
@@ -465,7 +465,7 @@ export default function DocumentUploadModal({
                     required
                   />
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: 12 }}>
                   <div className="form-group">
                     <label className="form-label">IFSC Code</label>
                     <input
