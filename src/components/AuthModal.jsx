@@ -11,6 +11,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
     password: '',
     role: 'student', // 'student' or 'admin'
   });
+  const [adminPasskey, setAdminPasskey] = useState('');
   const [forgotData, setForgotData] = useState({
     email: '',
     otp: '',
@@ -27,6 +28,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
 
   const resetAllState = () => {
     setFormData({ name: '', email: '', password: '', role: 'student' });
+    setAdminPasskey('');
     setForgotData({ email: '', otp: '', newPassword: '' });
     setError('');
     setInfo('');
@@ -53,8 +55,16 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
         if (!formData.email.trim()) throw new Error('Please enter your email');
         if (!formData.password || formData.password.length < 6)
           throw new Error('Password must be at least 6 characters');
+        if (formData.role === 'admin' && !adminPasskey.trim())
+          throw new Error('Enter the admin registration key');
 
-        await api.register(formData.name, formData.email, formData.password, formData.role);
+        await api.register(
+          formData.name,
+          formData.email,
+          formData.password,
+          formData.role,
+          adminPasskey,
+        );
         // After registration, auto-login
         const loginRes = await api.login(formData.email, formData.password);
         localStorage.setItem('scholarship_token', loginRes.access_token);
@@ -156,7 +166,10 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
               <button
                 type="button"
-                onClick={() => setFormData({ ...formData, role: 'student' })}
+                onClick={() => {
+                  setFormData({ ...formData, role: 'student' });
+                  setAdminPasskey('');
+                }}
                 style={{
                   padding: '10px 12px',
                   borderRadius: 8,
@@ -198,6 +211,29 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                 <span>Admin / Coordinator</span>
               </button>
             </div>
+          </div>
+        )}
+
+        {mode === 'register' && formData.role === 'admin' && (
+          <div className="form-group">
+            <label className="form-label" htmlFor="admin-registration-key">
+              Admin Registration Key
+            </label>
+            <div style={{ position: 'relative' }}>
+              <Lock size={16} color="#94a3b8" style={{ position: 'absolute', left: 12, top: 12 }} />
+              <input
+                id="admin-registration-key"
+                type="password"
+                className="form-input"
+                style={{ paddingLeft: 38 }}
+                autoComplete="off"
+                value={adminPasskey}
+                onChange={(e) => setAdminPasskey(e.target.value)}
+                placeholder="Enter the key provided by your administrator"
+                required
+              />
+            </div>
+            <p className="form-hint">Required to create an admin account.</p>
           </div>
         )}
 
@@ -333,6 +369,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
           type="button"
           onClick={() => {
             setMode(mode === 'register' ? 'login' : 'register');
+            setAdminPasskey('');
             setError('');
           }}
           style={{

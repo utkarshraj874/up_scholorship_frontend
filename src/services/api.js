@@ -56,11 +56,17 @@ export const api = {
     return res.json();
   },
 
-  async register(name, email, password, role = "student") {
+  async register(name, email, password, role = "student", adminPasskey = "") {
     const res = await fetch(`${API_BASE}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password, role }),
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        role,
+        ...(role === "admin" ? { admin_passkey: adminPasskey } : {}),
+      }),
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
