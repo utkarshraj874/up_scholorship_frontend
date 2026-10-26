@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { User, Award, ShieldAlert, CheckCircle2, Save, RefreshCw, AlertTriangle } from 'lucide-react';
+import { ShieldAlert, CheckCircle2, Save, RefreshCw, AlertTriangle } from 'lucide-react';
 import { api } from '../services/api';
+
+const registrationPattern = /^\d{4}UG\d{4}$/;
+const identityFieldValidators = {
+  registration_no: (value) => (
+    registrationPattern.test(value) ? '' : 'Use the format 2024UG1035 (4 digits, UG, then 4 digits).'
+  ),
+  phone_no: (value) => (
+    /^\d{10}$/.test(value) ? '' : 'Mobile number must contain exactly 10 digits.'
+  ),
+  aadhaar_no: (value) => (
+    !value || /^\d{12}$/.test(value) ? '' : 'Aadhaar number must contain exactly 12 digits.'
+  ),
+};
 
 export default function ProfileView({ user, onShowToast }) {
   const [profile, setProfile] = useState({
@@ -17,8 +30,6 @@ export default function ProfileView({ user, onShowToast }) {
     semester_result: '',
   });
 
-  // Duplicate state declarations removed – kept later definitions
-
   // Validation errors for client‑side checks
   const [validationErrors, setValidationErrors] = useState({});
 
@@ -27,43 +38,76 @@ export default function ProfileView({ user, onShowToast }) {
   const [saving, setSaving] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
 
-  useEffect(() => {
-    loadProfile();
-  }, [user]);
-
-  const loadProfile = async () => {
-    setLoading(true);
-    try {
-      const data = await api.getMyProfile();
-      if (data) {
-        setProfile({
-          name: data.name || user?.name || '',
-          registration_no: data.registration_no || '',
-          category: data.category || 'General',
-          department: data.department || 'Computer Science and Engineering',
-          semester: data.semester || 1,
-          phone_no: data.phone_no || '',
-          aadhaar_no: data.aadhaar_no || '',
-          tenth_percentage: data.tenth_percentage ?? '',
-          twelfth_percentage: data.twelfth_percentage ?? '',
-          family_income: data.family_income ?? '',
-          semester_result: data.semester_result ?? '',
-        });
-        setHasProfile(true);
-      } else {
-        setProfile((prev) => ({ ...prev, name: user?.name || '' }));
-        setHasProfile(false);
-      }
-    } catch (err) {
-      console.error(err);
-      onShowToast({ type: 'error', message: 'Could not load profile' });
-    } finally {
-      setLoading(false);
+  const updateIdentityField = (field, value) => {
+    let sanitizedValue = value;
+    if (field === 'registration_no') {
+      sanitizedValue = value.toUpperCase().replace(/[^0-9UG]/g, '').slice(0, 10);
+    } else {
+      sanitizedValue = value.replace(/\D/g, '').slice(0, field === 'phone_no' ? 10 : 12);
     }
+    setProfile((current) => ({ ...current, [field]: sanitizedValue }));
+    setValidationErrors((current) => ({
+      ...current,
+      [field]: current[field] ? identityFieldValidators[field](sanitizedValue) : '',
+    }));
   };
+
+  const validateIdentityFields = () => {
+    const errors = {
+      registration_no: identityFieldValidators.registration_no(profile.registration_no),
+      phone_no: identityFieldValidators.phone_no(profile.phone_no),
+      aadhaar_no: identityFieldValidators.aadhaar_no(profile.aadhaar_no),
+    };
+    setValidationErrors(errors);
+    return !Object.values(errors).some(Boolean);
+  };
+
+  useEffect(() => {
+    let active = true;
+
+    const loadProfile = async () => {
+      try {
+        const data = await api.getMyProfile();
+        if (!active) return;
+
+        if (data) {
+          setProfile({
+            name: data.name || user?.name || '',
+            registration_no: data.registration_no || '',
+            category: data.category || 'General',
+            department: data.department || 'Computer Science and Engineering',
+            semester: data.semester || 1,
+            phone_no: data.phone_no || '',
+            aadhaar_no: data.aadhaar_no || '',
+            tenth_percentage: data.tenth_percentage ?? '',
+            twelfth_percentage: data.twelfth_percentage ?? '',
+            family_income: data.family_income ?? '',
+            semester_result: data.semester_result ?? '',
+          });
+          setHasProfile(true);
+        } else {
+          setProfile((prev) => ({ ...prev, name: user?.name || '' }));
+          setHasProfile(false);
+        }
+      } catch (err) {
+        if (active) {
+          console.error(err);
+          onShowToast({ type: 'error', message: 'Could not load profile' });
+        }
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    loadProfile();
+    return () => {
+      active = false;
+    };
+  }, [onShowToast, user]);
 
   const handleSave = async (e) => {
     e.preventDefault();
+    if (!validateIdentityFields()) return;
     setSaving(true);
 
     try {
@@ -74,6 +118,7 @@ export default function ProfileView({ user, onShowToast }) {
         department: profile.department,
         semester: parseInt(profile.semester, 10),
         phone_no: profile.phone_no,
+        aadhaar_no: profile.aadhaar_no || null,
         tenth_percentage: parseFloat(profile.tenth_percentage),
         twelfth_percentage: parseFloat(profile.twelfth_percentage),
         family_income: parseFloat(profile.family_income),
@@ -147,17 +192,11 @@ export default function ProfileView({ user, onShowToast }) {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24 }}>
+      <div className="profile-layout">
         {/* Form Card */}
-        <div className="card" style={{ gridColumn: 'span 2' }}>
+        <div className="card profile-form-card">
           <form onSubmit={handleSave}>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                gap: 18,
-              }}
-            >
+            <div className="profile-fields-grid">
               {/* Name */}
               <div className="form-group">
                 <label className="form-label">Full Name (as per 10th Marksheet)</label>
@@ -178,11 +217,21 @@ export default function ProfileView({ user, onShowToast }) {
                   type="text"
                   className="form-input"
                   value={profile.registration_no}
-                  onChange={(e) => setProfile({ ...profile, registration_no: e.target.value })}
-                  placeholder="e.g. 2023UGCS045"
+                  onChange={(e) => updateIdentityField('registration_no', e.target.value)}
+                  onBlur={() => setValidationErrors((current) => ({
+                    ...current,
+                    registration_no: identityFieldValidators.registration_no(profile.registration_no),
+                  }))}
+                  placeholder="e.g. 2024UG1035"
+                  maxLength={10}
+                  aria-invalid={Boolean(validationErrors.registration_no)}
+                  aria-describedby="registration-no-hint registration-no-error"
                   required
                 />
-                <p className="form-hint">Used by IIIT Ranchi Academic Section to verify master roll.</p>
+                <p className="form-hint" id="registration-no-hint">Required format: 2024UG1035.</p>
+                {validationErrors.registration_no && (
+                  <p className="form-error" id="registration-no-error">{validationErrors.registration_no}</p>
+                )}
               </div>
 
               {/* Department */}
@@ -240,11 +289,48 @@ export default function ProfileView({ user, onShowToast }) {
                   type="tel"
                   className="form-input"
                   value={profile.phone_no}
-                  onChange={(e) => setProfile({ ...profile, phone_no: e.target.value })}
+                  onChange={(e) => updateIdentityField('phone_no', e.target.value)}
+                  onBlur={() => setValidationErrors((current) => ({
+                    ...current,
+                    phone_no: identityFieldValidators.phone_no(profile.phone_no),
+                  }))}
                   placeholder="e.g. 9876543210"
+                  inputMode="numeric"
+                  maxLength={10}
+                  aria-invalid={Boolean(validationErrors.phone_no)}
+                  aria-describedby="phone-no-hint phone-no-error"
                   required
                 />
-                <p className="form-hint">Must match mobile number registered for Aadhaar OTP.</p>
+                <p className="form-hint" id="phone-no-hint">Enter exactly 10 digits. Must match mobile number registered for Aadhaar OTP.</p>
+                {validationErrors.phone_no && (
+                  <p className="form-error" id="phone-no-error">{validationErrors.phone_no}</p>
+                )}
+              </div>
+
+              {/* Aadhaar Number */}
+              <div className="form-group">
+                <label className="form-label" htmlFor="aadhaar-no">Aadhaar Number (Optional)</label>
+                <input
+                  id="aadhaar-no"
+                  type="text"
+                  className="form-input"
+                  value={profile.aadhaar_no}
+                  onChange={(e) => updateIdentityField('aadhaar_no', e.target.value)}
+                  onBlur={() => setValidationErrors((current) => ({
+                    ...current,
+                    aadhaar_no: identityFieldValidators.aadhaar_no(profile.aadhaar_no),
+                  }))}
+                  placeholder="Enter 12 digits"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  maxLength={12}
+                  aria-invalid={Boolean(validationErrors.aadhaar_no)}
+                  aria-describedby="aadhaar-no-hint aadhaar-no-error"
+                />
+                <p className="form-hint" id="aadhaar-no-hint">If provided, enter exactly 12 digits.</p>
+                {validationErrors.aadhaar_no && (
+                  <p className="form-error" id="aadhaar-no-error">{validationErrors.aadhaar_no}</p>
+                )}
               </div>
 
               {/* 10th Percentage */}

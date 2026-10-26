@@ -21,6 +21,26 @@ function getHeaders(isFormData = false) {
   return headers;
 }
 
+function getErrorMessage(detail, fallback) {
+  if (typeof detail === "string" && detail.trim()) {
+    return detail;
+  }
+  if (Array.isArray(detail)) {
+    const messages = detail
+      .map((issue) => issue?.msg)
+      .filter((message) => typeof message === "string" && message.length > 0);
+    if (messages.length) {
+      return messages.join(". ");
+    }
+  }
+  return fallback;
+}
+
+async function readError(res, fallback) {
+  const error = await res.json().catch(() => ({}));
+  return new Error(getErrorMessage(error.detail, fallback));
+}
+
 export const api = {
   // 1. User Authentication
   async login(email, password) {
@@ -107,7 +127,7 @@ export const api = {
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || "Failed to save profile");
+      throw new Error(getErrorMessage(err.detail, "Failed to save profile"));
     }
     return res.json();
   },
@@ -120,7 +140,7 @@ export const api = {
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || "Failed to update profile");
+      throw new Error(getErrorMessage(err.detail, "Failed to update profile"));
     }
     return res.json();
   },
@@ -331,6 +351,98 @@ export const api = {
       throw new Error(err.detail || "Failed to reply to help query");
     }
     return res.json();
+  },
+
+  // 7. Scholarship assistant
+  async getChatConversations() {
+    const res = await fetch(`${API_BASE}/chat/conversations`, {
+      headers: getHeaders(),
+    });
+    if (!res.ok) throw await readError(res, "Failed to load chat history");
+    return res.json();
+  },
+
+  async createChatConversation(title = "New conversation") {
+    const res = await fetch(`${API_BASE}/chat/conversations`, {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify({ title }),
+    });
+    if (!res.ok) throw await readError(res, "Failed to create conversation");
+    return res.json();
+  },
+
+  async getChatConversation(conversationId) {
+    const res = await fetch(`${API_BASE}/chat/conversations/${conversationId}`, {
+      headers: getHeaders(),
+    });
+    if (!res.ok) throw await readError(res, "Failed to load conversation");
+    return res.json();
+  },
+
+  async deleteChatConversation(conversationId) {
+    const res = await fetch(`${API_BASE}/chat/conversations/${conversationId}`, {
+      method: "DELETE",
+      headers: getHeaders(),
+    });
+    if (!res.ok) throw await readError(res, "Failed to delete conversation");
+    return res.json();
+  },
+
+  async streamChatMessage(conversationId, content, { onToken, signal } = {}) {
+    const res = await fetch(
+      `${API_BASE}/chat/conversations/${conversationId}/messages/stream`,
+      {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify({ content }),
+        signal,
+      },
+    );
+    if (!res.ok) throw await readError(res, "Failed to send message");
+    if (!res.body) throw new Error("Streaming is not supported by this browser");
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let response = "";
+
+    const processEvents = (chunk) => {
+      buffer += chunk;
+      const events = buffer.split(/\r?\n\r?\n/);
+      buffer = events.pop() || "";
+      for (const event of events) {
+        const data = event
+          .split(/\r?\n/)
+          .filter((line) => line.startsWith("data:"))
+          .map((line) => line.slice(5).trim())
+          .join("\n");
+        if (!data) continue;
+        let payload;
+        try {
+          payload = JSON.parse(data);
+        } catch {
+          throw new Error("Received an invalid response from the assistant");
+        }
+        if (payload.error) throw new Error(payload.error);
+        if (typeof payload.token === "string") {
+          response += payload.token;
+          onToken?.(payload.token);
+        }
+      }
+    };
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        processEvents(decoder.decode(value, { stream: true }));
+      }
+      processEvents(decoder.decode());
+    } finally {
+      reader.releaseLock();
+    }
+    return response;
   },
 };
 
