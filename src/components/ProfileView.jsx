@@ -10,9 +10,6 @@ const identityFieldValidators = {
   phone_no: (value) => (
     /^\d{10}$/.test(value) ? '' : 'Mobile number must contain exactly 10 digits.'
   ),
-  aadhaar_no: (value) => (
-    !value || /^\d{12}$/.test(value) ? '' : 'Aadhaar number must contain exactly 12 digits.'
-  ),
 };
 
 export default function ProfileView({ user, onShowToast }) {
@@ -23,7 +20,6 @@ export default function ProfileView({ user, onShowToast }) {
     department: 'Computer Science and Engineering',
     semester: 1,
     phone_no: '',
-    aadhaar_no: '',
     tenth_percentage: '',
     twelfth_percentage: '',
     family_income: '',
@@ -43,7 +39,7 @@ export default function ProfileView({ user, onShowToast }) {
     if (field === 'registration_no') {
       sanitizedValue = value.toUpperCase().replace(/[^0-9UG]/g, '').slice(0, 10);
     } else {
-      sanitizedValue = value.replace(/\D/g, '').slice(0, field === 'phone_no' ? 10 : 12);
+      sanitizedValue = value.replace(/\D/g, '').slice(0, 10);
     }
     setProfile((current) => ({ ...current, [field]: sanitizedValue }));
     setValidationErrors((current) => ({
@@ -56,7 +52,6 @@ export default function ProfileView({ user, onShowToast }) {
     const errors = {
       registration_no: identityFieldValidators.registration_no(profile.registration_no),
       phone_no: identityFieldValidators.phone_no(profile.phone_no),
-      aadhaar_no: identityFieldValidators.aadhaar_no(profile.aadhaar_no),
     };
     setValidationErrors(errors);
     return !Object.values(errors).some(Boolean);
@@ -78,7 +73,6 @@ export default function ProfileView({ user, onShowToast }) {
             department: data.department || 'Computer Science and Engineering',
             semester: data.semester || 1,
             phone_no: data.phone_no || '',
-            aadhaar_no: data.aadhaar_no || '',
             tenth_percentage: data.tenth_percentage ?? '',
             twelfth_percentage: data.twelfth_percentage ?? '',
             family_income: data.family_income ?? '',
@@ -118,7 +112,6 @@ export default function ProfileView({ user, onShowToast }) {
         department: profile.department,
         semester: parseInt(profile.semester, 10),
         phone_no: profile.phone_no,
-        aadhaar_no: profile.aadhaar_no || null,
         tenth_percentage: parseFloat(profile.tenth_percentage),
         twelfth_percentage: parseFloat(profile.twelfth_percentage),
         family_income: parseFloat(profile.family_income),
@@ -284,7 +277,7 @@ export default function ProfileView({ user, onShowToast }) {
 
               {/* Phone No */}
               <div className="form-group">
-                <label className="form-label">Mobile Number (Aadhaar Linked)</label>
+                <label className="form-label">Mobile Number</label>
                 <input
                   type="tel"
                   className="form-input"
@@ -301,35 +294,9 @@ export default function ProfileView({ user, onShowToast }) {
                   aria-describedby="phone-no-hint phone-no-error"
                   required
                 />
-                <p className="form-hint" id="phone-no-hint">Enter exactly 10 digits. Must match mobile number registered for Aadhaar OTP.</p>
+                <p className="form-hint" id="phone-no-hint">Enter exactly 10 digits.</p>
                 {validationErrors.phone_no && (
                   <p className="form-error" id="phone-no-error">{validationErrors.phone_no}</p>
-                )}
-              </div>
-
-              {/* Aadhaar Number */}
-              <div className="form-group">
-                <label className="form-label" htmlFor="aadhaar-no">Aadhaar Number (Optional)</label>
-                <input
-                  id="aadhaar-no"
-                  type="text"
-                  className="form-input"
-                  value={profile.aadhaar_no}
-                  onChange={(e) => updateIdentityField('aadhaar_no', e.target.value)}
-                  onBlur={() => setValidationErrors((current) => ({
-                    ...current,
-                    aadhaar_no: identityFieldValidators.aadhaar_no(profile.aadhaar_no),
-                  }))}
-                  placeholder="Enter 12 digits"
-                  inputMode="numeric"
-                  autoComplete="off"
-                  maxLength={12}
-                  aria-invalid={Boolean(validationErrors.aadhaar_no)}
-                  aria-describedby="aadhaar-no-hint aadhaar-no-error"
-                />
-                <p className="form-hint" id="aadhaar-no-hint">If provided, enter exactly 12 digits.</p>
-                {validationErrors.aadhaar_no && (
-                  <p className="form-error" id="aadhaar-no-error">{validationErrors.aadhaar_no}</p>
                 )}
               </div>
 
