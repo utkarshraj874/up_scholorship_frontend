@@ -189,6 +189,19 @@ export const api = {
     return res.json();
   },
 
+  async updateDocument(category, formData) {
+    const res = await fetch(`${API_BASE}/documents/${encodeURIComponent(category)}`, {
+      method: "PUT",
+      headers: getHeaders(true),
+      body: formData,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || "Failed to update document");
+    }
+    return res.json();
+  },
+
   async getDocumentFileUrl(category, userId) {
     const url = userId
       ? `${API_BASE}/documents/${category}/file?user_id=${userId}`

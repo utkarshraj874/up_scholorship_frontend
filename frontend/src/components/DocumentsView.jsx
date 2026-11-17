@@ -142,7 +142,7 @@ export default function DocumentsView({ user, onShowToast }) {
     }
   };
 
-  const uploadedCount = DOCUMENT_DEFINITIONS.filter((def) => documents[def.category]).length;
+  const uploadedCount = DOCUMENT_DEFINITIONS.filter((def) => documents[def.category]?.file_path).length;
   const totalCount = DOCUMENT_DEFINITIONS.length;
 
   if (loading) {
@@ -227,12 +227,15 @@ export default function DocumentsView({ user, onShowToast }) {
       >
         {DOCUMENT_DEFINITIONS.map((def) => {
           const doc = documents[def.category];
-          const isUploaded = Boolean(doc);
+          const hasSavedDetails = Boolean(doc);
+          const isUploaded = Boolean(doc?.file_path);
           const isVerified = doc?.status === 'verified';
           const needsCorrection = doc?.status === 'correction_required';
 
-          const cardBorderColor = !isUploaded
+          const cardBorderColor = !hasSavedDetails
             ? '#cbd5e1'
+            : !isUploaded
+            ? '#f59e0b'
             : isVerified
             ? '#10b981'
             : needsCorrection
@@ -318,22 +321,28 @@ export default function DocumentsView({ user, onShowToast }) {
                       borderRadius: 9999,
                       fontSize: '0.72rem',
                       fontWeight: 700,
-                      backgroundColor: !isUploaded
+                      backgroundColor: !hasSavedDetails
                         ? '#f1f5f9'
+                        : !isUploaded
+                        ? '#fffbeb'
                         : isVerified
                         ? '#ecfdf5'
                         : needsCorrection
                         ? '#fef2f2'
                         : '#eff6ff',
-                      color: !isUploaded
+                      color: !hasSavedDetails
                         ? '#64748b'
+                        : !isUploaded
+                        ? '#b45309'
                         : isVerified
                         ? '#059669'
                         : needsCorrection
                         ? '#dc2626'
                         : '#2563eb',
-                      border: !isUploaded
+                      border: !hasSavedDetails
                         ? '1px solid #cbd5e1'
+                        : !isUploaded
+                        ? '1px solid #fde68a'
                         : isVerified
                         ? '1px solid #a7f3d0'
                         : needsCorrection
@@ -341,8 +350,10 @@ export default function DocumentsView({ user, onShowToast }) {
                         : '1px solid #bfdbfe',
                     }}
                   >
-                    {!isUploaded
+                    {!hasSavedDetails
                       ? 'Pending'
+                      : !isUploaded
+                      ? 'Details Saved'
                       : isVerified
                       ? 'Verified ✓'
                       : needsCorrection
@@ -401,7 +412,7 @@ export default function DocumentsView({ user, onShowToast }) {
                 )}
 
                 {/* Metadata Details if Uploaded */}
-                {isUploaded && (
+                {hasSavedDetails && (
                   <div
                     style={{
                       backgroundColor: '#f8fafc',
@@ -413,9 +424,15 @@ export default function DocumentsView({ user, onShowToast }) {
                       border: '1px solid #e2e8f0',
                     }}
                   >
-                    <div style={{ fontWeight: 600, color: '#0f172a', marginBottom: 4 }}>
-                      File: {doc.file_name} ({(doc.file_size / 1024).toFixed(1)} KB)
-                    </div>
+                    {isUploaded ? (
+                      <div style={{ fontWeight: 600, color: '#0f172a', marginBottom: 4 }}>
+                        File: {doc.file_name} ({(doc.file_size / 1024).toFixed(1)} KB)
+                      </div>
+                    ) : (
+                      <div style={{ fontWeight: 600, color: '#b45309', marginBottom: 4 }}>
+                        Details saved. Marksheet file still needs to be uploaded.
+                      </div>
+                    )}
                     {doc.aadhaar_number && <div>Aadhaar: **** **** {doc.aadhaar_number.slice(-4)}</div>}
                     {doc.tenth_roll_number && (
                       <div>

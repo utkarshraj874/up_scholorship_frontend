@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X, Upload, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
 import { api } from '../services/api';
 
@@ -15,6 +15,31 @@ const DOCUMENT_LABELS = {
   profile_photo: 'Passport Size Photograph',
 };
 
+const getInitialDetails = (doc) => ({
+  aadhaar_number: doc?.aadhaar_number || '',
+  tenth_roll_number: doc?.tenth_roll_number || '',
+  tenth_board: doc?.tenth_board || 'CBSE',
+  tenth_passing_year: doc?.tenth_passing_year || 2021,
+  tenth_percentage: doc?.tenth_percentage ?? '',
+  tenth_cgpa: doc?.tenth_cgpa ?? '',
+  tenth_score_type: doc?.tenth_cgpa != null ? 'cgpa' : 'percentage',
+  twelfth_roll_number: doc?.twelfth_roll_number || '',
+  twelfth_board: doc?.twelfth_board || 'CBSE',
+  twelfth_passing_year: doc?.twelfth_passing_year || 2023,
+  twelfth_percentage: doc?.twelfth_percentage ?? '',
+  twelfth_cgpa: doc?.twelfth_cgpa ?? '',
+  twelfth_score_type: doc?.twelfth_cgpa != null ? 'cgpa' : 'percentage',
+  document_number: doc?.document_number || '',
+  issue_date: doc?.issue_date || '',
+  total_income: doc?.total_income || '',
+  certificate_category: doc?.certificate_category || 'OBC',
+  domicile_state: doc?.domicile_state || 'Uttar Pradesh',
+  bank_account_number: doc?.bank_account_number || '',
+  bank_ifsc: doc?.bank_ifsc || '',
+  bank_name: doc?.bank_name || '',
+  bank_branch: doc?.bank_branch || '',
+});
+
 export default function DocumentUploadModal({
   isOpen,
   onClose,
@@ -27,39 +52,19 @@ export default function DocumentUploadModal({
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const [savedDocument, setSavedDocument] = useState(null);
+  const currentDocument = existingDoc || (savedDocument?.category === category ? savedDocument : null);
+  const isMarksheet = category === 'tenth_marksheet' || category === 'twelfth_marksheet';
 
   // Category specific fields
-  const [details, setDetails] = useState({
-    // aadhaar
-    aadhaar_number: existingDoc?.aadhaar_number || '',
-    // 10th
-    tenth_roll_number: existingDoc?.tenth_roll_number || '',
-    tenth_board: existingDoc?.tenth_board || 'CBSE',
-    tenth_passing_year: existingDoc?.tenth_passing_year || 2021,
-    tenth_percentage: existingDoc?.tenth_percentage ?? '',
-    tenth_cgpa: existingDoc?.tenth_cgpa ?? '',
-    tenth_score_type: existingDoc?.tenth_cgpa != null ? 'cgpa' : 'percentage',
-    // 12th
-    twelfth_roll_number: existingDoc?.twelfth_roll_number || '',
-    twelfth_board: existingDoc?.twelfth_board || 'CBSE',
-    twelfth_passing_year: existingDoc?.twelfth_passing_year || 2023,
-    twelfth_percentage: existingDoc?.twelfth_percentage ?? '',
-    twelfth_cgpa: existingDoc?.twelfth_cgpa ?? '',
-    twelfth_score_type: existingDoc?.twelfth_cgpa != null ? 'cgpa' : 'percentage',
-    // income
-    document_number: existingDoc?.document_number || '',
-    issue_date: existingDoc?.issue_date || '',
-    total_income: existingDoc?.total_income || '',
-    // caste
-    certificate_category: existingDoc?.certificate_category || 'OBC',
-    // domicile
-    domicile_state: existingDoc?.domicile_state || 'Uttar Pradesh',
-    // bank
-    bank_account_number: existingDoc?.bank_account_number || '',
-    bank_ifsc: existingDoc?.bank_ifsc || '',
-    bank_name: existingDoc?.bank_name || '',
-    bank_branch: existingDoc?.bank_branch || '',
-  });
+  const [details, setDetails] = useState(() => getInitialDetails(existingDoc));
+
+  useEffect(() => {
+    setDetails(getInitialDetails(existingDoc));
+    setFile(null);
+    setError('');
+    setSavedDocument(null);
+  }, [category, existingDoc?.id]);
 
   if (!isOpen || !category) return null;
 
@@ -82,7 +87,13 @@ export default function DocumentUploadModal({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!file && !existingDoc) {
+    const action = e.nativeEvent?.submitter?.dataset?.action || 'upload';
+    const saveDetailsOnly = isMarksheet && action === 'save-details';
+    if (isMarksheet && action === 'upload-file' && !file) {
+      setError('Choose the marksheet file you want to upload');
+      return;
+    }
+    if (!saveDetailsOnly && !file && !currentDocument) {
       setError('Please choose a file to upload');
       return;
     }
@@ -155,17 +166,28 @@ export default function DocumentUploadModal({
       }
 
       formData.append('details', JSON.stringify(payload));
-      if (file) {
+      if (file && !saveDetailsOnly) {
         formData.append('file', file);
       }
 
-      await api.uploadDocument(formData);
-      onShowToast({
-        type: 'success',
-        message: `${DOCUMENT_LABELS[category] || category} uploaded successfully!`,
-      });
-      onSuccess();
-      onClose();
+      const saved = currentDocument
+        ? await api.updateDocument(category, formData)
+        : await api.uploadDocument(formData);
+
+      await onSuccess();
+      if (saveDetailsOnly) {
+        setSavedDocument(saved);
+        onShowToast({
+          type: 'success',
+          message: 'Marksheet details saved. You can upload the file when ready.',
+        });
+      } else {
+        onShowToast({
+          type: 'success',
+          message: `${DOCUMENT_LABELS[category] || category} uploaded successfully!`,
+        });
+        onClose();
+      }
     } catch (err) {
       setError(err.message || 'Upload failed');
     } finally {
@@ -594,13 +616,22 @@ export default function DocumentUploadModal({
                       {(file.size / 1024).toFixed(1)} KB
                     </div>
                   </div>
-                ) : existingDoc ? (
+                ) : currentDocument?.file_path ? (
                   <div>
                     <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#334155' }}>
-                      Currently uploaded: {existingDoc.file_name}
+                      Currently uploaded: {currentDocument.file_name}
                     </div>
                     <div style={{ fontSize: '0.78rem', color: '#2563eb', marginTop: 4 }}>
                       Click to choose a replacement file
+                    </div>
+                  </div>
+                ) : currentDocument ? (
+                  <div>
+                    <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#334155' }}>
+                      Marksheet details are saved
+                    </div>
+                    <div style={{ fontSize: '0.78rem', color: '#2563eb', marginTop: 4 }}>
+                      Choose a file to upload them with the marksheet
                     </div>
                   </div>
                 ) : (
@@ -621,10 +652,33 @@ export default function DocumentUploadModal({
             <button type="button" className="btn btn-secondary" onClick={onClose} disabled={uploading}>
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary" disabled={uploading}>
-              <Upload size={16} />
-              <span>{uploading ? 'Uploading...' : 'Save & Upload'}</span>
-            </button>
+            {isMarksheet ? (
+              <>
+                <button
+                  type="submit"
+                  data-action="save-details"
+                  className="btn btn-secondary"
+                  disabled={uploading}
+                >
+                  <CheckCircle2 size={16} />
+                  <span>{uploading ? 'Saving...' : 'Save Details'}</span>
+                </button>
+                <button
+                  type="submit"
+                  data-action="upload-file"
+                  className="btn btn-primary"
+                  disabled={uploading || !file}
+                >
+                  <Upload size={16} />
+                  <span>{uploading ? 'Uploading...' : currentDocument?.file_path ? 'Replace File' : 'Upload File'}</span>
+                </button>
+              </>
+            ) : (
+              <button type="submit" className="btn btn-primary" disabled={uploading}>
+                <Upload size={16} />
+                <span>{uploading ? 'Uploading...' : 'Save & Upload'}</span>
+              </button>
+            )}
           </div>
         </form>
       </div>
