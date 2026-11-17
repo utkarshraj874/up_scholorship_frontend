@@ -160,24 +160,46 @@ export default function HelpDeskView({ user, onShowToast }) {
       {/* STUDENT VIEW */}
       {!isAdmin && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: 24 }}>
-          <div className="card" style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-            <div>
-              <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#0f172a' }}>
-                Open UIDAI Resident Portal
-              </h3>
-              <p style={{ fontSize: '0.82rem', color: '#64748b', marginTop: 4 }}>
-                Open UIDAI's resident portal for Aadhaar services.
-              </p>
+          <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: 24 }}>
+            <div className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+              <div>
+                <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#0f172a' }}>
+                  Know Your DBT Status
+                </h3>
+                <p style={{ fontSize: '0.82rem', color: '#64748b', marginTop: 4 }}>
+                  Check whether your Aadhaar is seeded with your bank account for DBT benefits.
+                </p>
+              </div>
+              <a
+                href="https://myaadhaar.uidai.gov.in/bank-seeding-status"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary"
+              >
+                <span>Check DBT Status</span>
+                <ExternalLink size={15} />
+              </a>
             </div>
-            <a
-              href="https://tathya.uidai.gov.in/access/login?role=resident"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary"
-            >
-              <span>Open UIDAI Portal</span>
-              <ExternalLink size={15} />
-            </a>
+
+            <div className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+              <div>
+                <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#0f172a' }}>
+                  Know Your Payment Status
+                </h3>
+                <p style={{ fontSize: '0.82rem', color: '#64748b', marginTop: 4 }}>
+                  Check your scholarship payment status through PFMS.
+                </p>
+              </div>
+              <a
+                href="https://pfms.nic.in/SitePages/KnowYourPayment_Dw_NewNew.aspx?utm_source=chatgpt.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary"
+              >
+                <span>Check Payment Status</span>
+                <ExternalLink size={15} />
+              </a>
+            </div>
           </div>
 
           {/* Query submission form */}

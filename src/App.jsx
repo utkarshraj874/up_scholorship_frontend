@@ -10,6 +10,7 @@ import {
   UserRoundCheck,
 } from 'lucide-react';
 import Navbar from './components/Navbar';
+import DashboardView from './components/DashboardView';
 import AuthModal from './components/AuthModal';
 import ProfileView from './components/ProfileView';
 import DocumentsView from './components/DocumentsView';
@@ -58,7 +59,7 @@ export default function App() {
           const userData = await api.getMe();
           if (!cancelled) {
             setUser(userData);
-            setActiveTab(userData.role === 'admin' ? 'admin' : 'profile');
+            setActiveTab(userData.role === 'admin' ? 'admin' : 'dashboard');
           }
         } catch (err) {
           console.error('Session expired or invalid', err);
@@ -81,14 +82,14 @@ export default function App() {
 
   const handleAuthSuccess = (userData) => {
     setUser(userData);
-    setActiveTab(userData.role === 'admin' ? 'admin' : 'profile');
+    setActiveTab(userData.role === 'admin' ? 'admin' : 'dashboard');
     showToast({
       type: 'success',
       message: `Welcome, ${userData.name || (userData.role === 'admin' ? 'Coordinator' : 'Student')}!`,
     });
     api.getMe().then((authenticatedUser) => {
       setUser(authenticatedUser);
-      setActiveTab(authenticatedUser.role === 'admin' ? 'admin' : 'profile');
+      setActiveTab(authenticatedUser.role === 'admin' ? 'admin' : 'dashboard');
     }).catch((err) => {
       console.error('Could not refresh authenticated user details', err);
       if (!userData.role) {
@@ -201,6 +202,7 @@ export default function App() {
           </div>
         ) : (
           <div className="workspace-content">
+            {activeTab === 'dashboard' && <DashboardView user={user} />}
             {activeTab === 'admin' && <AdminView user={user} onShowToast={showToast} />}
             {activeTab === 'help' && <HelpDeskView user={user} onShowToast={showToast} />}
             {activeTab === 'profile' && <ProfileView user={user} onShowToast={showToast} />}

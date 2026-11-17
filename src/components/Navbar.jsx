@@ -3,6 +3,7 @@ import {
   BookOpen,
   FileText,
   GraduationCap,
+  LayoutDashboard,
   LogIn,
   LogOut,
   Menu,
@@ -16,6 +17,7 @@ import {
 import NotificationDropdown from './NotificationDropdown';
 
 const studentNavigation = [
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'profile', label: 'Student profile', icon: User },
   { id: 'documents', label: 'Document vault', icon: FileText },
   { id: 'help', label: 'Help desk', icon: MessageSquare },
