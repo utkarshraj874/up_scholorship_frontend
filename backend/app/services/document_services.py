@@ -100,7 +100,7 @@ async def create_document(
     )
 
     # Upload to Supabase
-    upload_file(
+    upload_result = upload_file(
         file_content=file_content,
         storage_path=storage_path,
         content_type=file.content_type,
@@ -114,7 +114,7 @@ async def create_document(
             file_type=file.content_type,
             file_size=len(file_content),
             file_path=storage_path,
-            storage_provider="supabase",
+            storage_provider=upload_result["provider"],
             **details,
         )
 
@@ -234,7 +234,7 @@ async def update_document(
                 file.filename,
             )
 
-            upload_file(
+            upload_result = upload_file(
                 file_content=file_content,
                 storage_path=new_file_path,
                 content_type=file.content_type,
@@ -244,6 +244,7 @@ async def update_document(
             document.file_type = file.content_type
             document.file_size = len(file_content)
             document.file_path = new_file_path
+            document.storage_provider = upload_result["provider"]
 
         # Update details
         for key, value in details.items():

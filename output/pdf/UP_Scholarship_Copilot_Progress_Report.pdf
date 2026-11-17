@@ -1,0 +1,481 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+3 0 obj
+<< /Length 4485 >>
+stream
+0.055 0.105 0.220 rg
+0 742 612 50 re f
+1.000 1.000 1.000 rg
+BT /F2 10.5 Tf 1 0 0 1 42.00 765.00 Tm (UP SCHOLARSHIP COPILOT) Tj ET
+0.830 0.880 0.960 rg
+BT /F1 7.2 Tf 1 0 0 1 42.00 750.00 Tm (PROJECT PROGRESS REVIEW  |  17 NOVEMBER 2026) Tj ET
+1.000 1.000 1.000 rg
+BT /F2 9.0 Tf 1 0 0 1 545.00 759.00 Tm (1) Tj ET
+0.830 0.870 0.920 rg
+42 38 528 0.8 re f
+0.360 0.410 0.490 rg
+BT /F1 7.2 Tf 1 0 0 1 42.00 24.00 Tm (Source: UP Scholarship Copilot Final MVP and PM Validation Brief) Tj ET
+0.360 0.410 0.490 rg
+BT /F1 7.2 Tf 1 0 0 1 558.00 24.00 Tm (1) Tj ET
+0.055 0.105 0.220 rg
+BT /F2 20.0 Tf 1 0 0 1 48.00 713.00 Tm (Completion status) Tj ET
+0.360 0.410 0.490 rg
+BT /F1 9.4 Tf 1 0 0 1 48.00 685.00 Tm (Assessment against the original 12-page project brief, including its locked MVP scope and developer) Tj ET
+0.360 0.410 0.490 rg
+BT /F1 9.4 Tf 1 0 0 1 48.00 672.00 Tm (acceptance checklist.) Tj ET
+0.940 0.960 0.990 rg
+0.830 0.870 0.920 RG
+0.6 w
+48 572 516 96 re B
+0.150 0.360 0.780 rg
+BT /F2 8.0 Tf 1 0 0 1 64.00 645.00 Tm (ESTIMATED WEIGHTED REQUIREMENT COMPLETION) Tj ET
+0.055 0.105 0.220 rg
+BT /F2 34.0 Tf 1 0 0 1 64.00 600.00 Tm (26%) Tj ET
+0.055 0.105 0.220 rg
+BT /F2 14.0 Tf 1 0 0 1 158.00 618.00 Tm (Working partial MVP) Tj ET
+0.360 0.410 0.490 rg
+BT /F1 8.8 Tf 1 0 0 1 158.00 598.00 Tm (Substantial feature foundations exist; the brief is not yet fully met.) Tj ET
+0.360 0.410 0.490 rg
+BT /F1 8.0 Tf 1 0 0 1 158.00 582.00 Tm (This estimates acceptance coverage, not lines of code or effort spent.) Tj ET
+0.055 0.105 0.220 rg
+BT /F2 13.0 Tf 1 0 0 1 48.00 538.00 Tm (Executive summary) Tj ET
+0.150 0.360 0.780 rg
+48 520 42 2 re f
+0.120 0.160 0.230 rg
+BT /F1 9.1 Tf 1 0 0 1 48.00 511.00 Tm (The repository contains a working React/FastAPI product foundation: email/password accounts, student) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 9.1 Tf 1 0 0 1 48.00 498.00 Tm (profile forms, document upload and maintenance, coordinator review, notifications, help requests, static) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 9.1 Tf 1 0 0 1 48.00 485.00 Tm (scholarship guidance, and a Groq-backed chat with saved history.) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 9.1 Tf 1 0 0 1 48.00 467.00 Tm (The central readiness journey described in the brief is incomplete. There is no Fresh/Renewal route,) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 9.1 Tf 1 0 0 1 48.00 454.00 Tm (dynamic requirement checklist, applicant-managed stage tracker, deadline and expiry reminder flow, or) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 9.1 Tf 1 0 0 1 48.00 441.00 Tm (admin-managed official knowledge base. The assistant does not retrieve verified sources or cite them.) Tj ET
+0.055 0.105 0.220 rg
+BT /F2 13.0 Tf 1 0 0 1 48.00 416.00 Tm (Release readiness) Tj ET
+0.150 0.360 0.780 rg
+48 398 42 2 re f
+1.000 0.960 0.930 rg
+0.900 0.760 0.660 RG
+0.6 w
+48 328 516 70 re B
+0.650 0.160 0.160 rg
+BT /F2 9.0 Tf 1 0 0 1 62.00 379.00 Tm (NOT READY FOR REAL STUDENT DOCUMENTS OR A PILOT) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.5 Tf 1 0 0 1 62.00 389.00 Tm (Document routes accept an unauthenticated user_id; local uploads are mounted publicly; and admin endpoints) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.5 Tf 1 0 0 1 62.00 377.50 Tm (return student file links. Aadhaar and bank account values are stored as document metadata. These behaviors) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.5 Tf 1 0 0 1 62.00 366.00 Tm (conflict with the brief's privacy boundary.) Tj ET
+0.055 0.105 0.220 rg
+BT /F2 13.0 Tf 1 0 0 1 48.00 297.00 Tm (How to read the score) Tj ET
+0.150 0.360 0.780 rg
+48 279 42 2 re f
+0.120 0.160 0.230 rg
+BT /F1 8.8 Tf 1 0 0 1 48.00 270.00 Tm (The weighted rubric covers 10 implementation areas. Each area is rated for the portion of its brief) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.8 Tf 1 0 0 1 48.00 258.00 Tm (requirement represented in the code, then multiplied by its weight. Weights total 100; the result is 24/100.) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.8 Tf 1 0 0 1 48.00 246.00 Tm (Partial features earn partial credit only when important acceptance conditions remain unmet.) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.8 Tf 1 0 0 1 48.00 229.00 Tm (The brief also specifies PM work beyond code: user interviews, prototype validation, task-based usability) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.8 Tf 1 0 0 1 48.00 217.00 Tm (sessions, an evidence-based iteration and a case study. These artifacts were not found in the checked) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.8 Tf 1 0 0 1 48.00 205.00 Tm (repository. Work done elsewhere is not included in this code score.) Tj ET
+
+endstream
+endobj
+4 0 obj
+<< /Type /Page /Parent 9 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> /Contents 3 0 R >>
+endobj
+5 0 obj
+<< /Length 8875 >>
+stream
+0.055 0.105 0.220 rg
+0 742 612 50 re f
+1.000 1.000 1.000 rg
+BT /F2 10.5 Tf 1 0 0 1 42.00 765.00 Tm (UP SCHOLARSHIP COPILOT) Tj ET
+0.830 0.880 0.960 rg
+BT /F1 7.2 Tf 1 0 0 1 42.00 750.00 Tm (PROJECT PROGRESS REVIEW  |  17 NOVEMBER 2026) Tj ET
+1.000 1.000 1.000 rg
+BT /F2 9.0 Tf 1 0 0 1 545.00 759.00 Tm (2) Tj ET
+0.830 0.870 0.920 rg
+42 38 528 0.8 re f
+0.360 0.410 0.490 rg
+BT /F1 7.2 Tf 1 0 0 1 42.00 24.00 Tm (Source: UP Scholarship Copilot Final MVP and PM Validation Brief) Tj ET
+0.360 0.410 0.490 rg
+BT /F1 7.2 Tf 1 0 0 1 558.00 24.00 Tm (2) Tj ET
+0.055 0.105 0.220 rg
+BT /F2 20.0 Tf 1 0 0 1 48.00 713.00 Tm (Requirement-by-requirement score) Tj ET
+0.360 0.410 0.490 rg
+BT /F1 8.6 Tf 1 0 0 1 48.00 685.00 Tm (Static code-review judgments. These describe evidence found in this repository; they do not imply that the code) Tj ET
+0.360 0.410 0.490 rg
+BT /F1 8.6 Tf 1 0 0 1 48.00 673.00 Tm (passed acceptance testing.) Tj ET
+0.055 0.105 0.220 rg
+48 630 516 26 re f
+1.000 1.000 1.000 rg
+BT /F2 7.6 Tf 1 0 0 1 54.00 639.00 Tm (Requirement area) Tj ET
+1.000 1.000 1.000 rg
+BT /F2 7.6 Tf 1 0 0 1 179.00 639.00 Tm (Weight) Tj ET
+1.000 1.000 1.000 rg
+BT /F2 7.6 Tf 1 0 0 1 225.00 639.00 Tm (Done) Tj ET
+1.000 1.000 1.000 rg
+BT /F2 7.6 Tf 1 0 0 1 282.00 639.00 Tm (Evidence and remaining gap) Tj ET
+0.965 0.975 0.990 rg
+0.830 0.870 0.920 RG
+0.6 w
+48 599 516 31 re B
+0.830 0.870 0.920 RG
+0.4 w 176 599 m 176 630 l S
+0.830 0.870 0.920 RG
+0.4 w 222 599 m 222 630 l S
+0.830 0.870 0.920 RG
+0.4 w 276 599 m 276 630 l S
+0.120 0.160 0.230 rg
+BT /F2 7.5 Tf 1 0 0 1 54.00 618.00 Tm (Account and lean profile) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.8 Tf 1 0 0 1 184.00 614.00 Tm (15%) Tj ET
+0.150 0.360 0.780 rg
+BT /F2 7.8 Tf 1 0 0 1 230.00 614.00 Tm (65%) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 619.00 Tm (Email/password login, password reset and profile CRUD exist. No email) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 610.00 Tm (OTP or Google sign-in; profile exceeds the brief's lean setup.) Tj ET
+1.000 1.000 1.000 rg
+0.830 0.870 0.920 RG
+0.6 w
+48 568 516 31 re B
+0.830 0.870 0.920 RG
+0.4 w 176 568 m 176 599 l S
+0.830 0.870 0.920 RG
+0.4 w 222 568 m 222 599 l S
+0.830 0.870 0.920 RG
+0.4 w 276 568 m 276 599 l S
+0.120 0.160 0.230 rg
+BT /F2 7.5 Tf 1 0 0 1 54.00 587.00 Tm (Fresh / Renewal route) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.8 Tf 1 0 0 1 184.00 583.00 Tm (5%) Tj ET
+0.150 0.360 0.780 rg
+BT /F2 7.8 Tf 1 0 0 1 230.00 583.00 Tm (0%) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 588.00 Tm (No applicant route selection or route-specific journey found.) Tj ET
+0.965 0.975 0.990 rg
+0.830 0.870 0.920 RG
+0.6 w
+48 537 516 31 re B
+0.830 0.870 0.920 RG
+0.4 w 176 537 m 176 568 l S
+0.830 0.870 0.920 RG
+0.4 w 222 537 m 222 568 l S
+0.830 0.870 0.920 RG
+0.4 w 276 537 m 276 568 l S
+0.120 0.160 0.230 rg
+BT /F2 7.5 Tf 1 0 0 1 54.00 556.00 Tm (Private document vault) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.8 Tf 1 0 0 1 184.00 552.00 Tm (15%) Tj ET
+0.150 0.360 0.780 rg
+BT /F2 7.8 Tf 1 0 0 1 230.00 552.00 Tm (45%) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 557.00 Tm (Nine categories and upload, replacement, view and delete flows exist.) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 548.00 Tm (Privacy and access boundaries fail the brief.) Tj ET
+1.000 1.000 1.000 rg
+0.830 0.870 0.920 RG
+0.6 w
+48 506 516 31 re B
+0.830 0.870 0.920 RG
+0.4 w 176 506 m 176 537 l S
+0.830 0.870 0.920 RG
+0.4 w 222 506 m 222 537 l S
+0.830 0.870 0.920 RG
+0.4 w 276 506 m 276 537 l S
+0.120 0.160 0.230 rg
+BT /F2 7.5 Tf 1 0 0 1 54.00 525.00 Tm (Dynamic readiness checklist) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.8 Tf 1 0 0 1 184.00 521.00 Tm (15%) Tj ET
+0.150 0.360 0.780 rg
+BT /F2 7.8 Tf 1 0 0 1 230.00 521.00 Tm (40%) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 526.00 Tm (Fixed nine-category cards show uploaded/missing and review states. No) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 517.00 Tm (route-specific rules, expiry status or not-applicable state mapping.) Tj ET
+0.965 0.975 0.990 rg
+0.830 0.870 0.920 RG
+0.6 w
+48 475 516 31 re B
+0.830 0.870 0.920 RG
+0.4 w 176 475 m 176 506 l S
+0.830 0.870 0.920 RG
+0.4 w 222 475 m 222 506 l S
+0.830 0.870 0.920 RG
+0.4 w 276 475 m 276 506 l S
+0.120 0.160 0.230 rg
+BT /F2 7.5 Tf 1 0 0 1 54.00 494.00 Tm (Stage and reminders) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.8 Tf 1 0 0 1 184.00 490.00 Tm (10%) Tj ET
+0.150 0.360 0.780 rg
+BT /F2 7.8 Tf 1 0 0 1 230.00 490.00 Tm (5%) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 495.00 Tm (Coordinator review notifications exist. No applicant-managed stages,) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 486.00 Tm (next action, deadlines or expiry reminders.) Tj ET
+1.000 1.000 1.000 rg
+0.830 0.870 0.920 RG
+0.6 w
+48 444 516 31 re B
+0.830 0.870 0.920 RG
+0.4 w 176 444 m 176 475 l S
+0.830 0.870 0.920 RG
+0.4 w 222 444 m 222 475 l S
+0.830 0.870 0.920 RG
+0.4 w 276 444 m 276 475 l S
+0.120 0.160 0.230 rg
+BT /F2 7.5 Tf 1 0 0 1 54.00 463.00 Tm (Verified issue guidance) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.8 Tf 1 0 0 1 184.00 459.00 Tm (10%) Tj ET
+0.150 0.360 0.780 rg
+BT /F2 7.8 Tf 1 0 0 1 230.00 459.00 Tm (20%) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 464.00 Tm (Hard-coded guide links the portal, but claims have no citations or) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 455.00 Tm (verification dates; no searchable issue taxonomy or escalation content.) Tj ET
+0.965 0.975 0.990 rg
+0.830 0.870 0.920 RG
+0.6 w
+48 413 516 31 re B
+0.830 0.870 0.920 RG
+0.4 w 176 413 m 176 444 l S
+0.830 0.870 0.920 RG
+0.4 w 222 413 m 222 444 l S
+0.830 0.870 0.920 RG
+0.4 w 276 413 m 276 444 l S
+0.120 0.160 0.230 rg
+BT /F2 7.5 Tf 1 0 0 1 54.00 432.00 Tm (Admin knowledge management) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.8 Tf 1 0 0 1 184.00 428.00 Tm (10%) Tj ET
+0.150 0.360 0.780 rg
+BT /F2 7.8 Tf 1 0 0 1 230.00 428.00 Tm (0%) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 433.00 Tm (Admin manages students, reviews and replies. No official) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 424.00 Tm (notices/rules/source editing, versioning or archive.) Tj ET
+1.000 1.000 1.000 rg
+0.830 0.870 0.920 RG
+0.6 w
+48 382 516 31 re B
+0.830 0.870 0.920 RG
+0.4 w 176 382 m 176 413 l S
+0.830 0.870 0.920 RG
+0.4 w 222 382 m 222 413 l S
+0.830 0.870 0.920 RG
+0.4 w 276 382 m 276 413 l S
+0.120 0.160 0.230 rg
+BT /F2 7.5 Tf 1 0 0 1 54.00 401.00 Tm (Source-grounded assistant) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.8 Tf 1 0 0 1 184.00 397.00 Tm (5%) Tj ET
+0.150 0.360 0.780 rg
+BT /F2 7.8 Tf 1 0 0 1 230.00 397.00 Tm (15%) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 402.00 Tm (Groq chat, streaming and history exist. No verified-content retrieval,) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 393.00 Tm (citations or reliable abstention.) Tj ET
+0.965 0.975 0.990 rg
+0.830 0.870 0.920 RG
+0.6 w
+48 343 516 39 re B
+0.830 0.870 0.920 RG
+0.4 w 176 343 m 176 382 l S
+0.830 0.870 0.920 RG
+0.4 w 222 343 m 222 382 l S
+0.830 0.870 0.920 RG
+0.4 w 276 343 m 276 382 l S
+0.120 0.160 0.230 rg
+BT /F2 7.5 Tf 1 0 0 1 54.00 370.00 Tm (Privacy and access) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.8 Tf 1 0 0 1 184.00 366.00 Tm (10%) Tj ET
+0.150 0.360 0.780 rg
+BT /F2 7.8 Tf 1 0 0 1 230.00 366.00 Tm (5%) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 371.00 Tm (JWT/role checks exist elsewhere, but document routes accept) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 362.00 Tm (unauthenticated user_id; /uploads is public and admins receive file) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 353.00 Tm (links.) Tj ET
+1.000 1.000 1.000 rg
+0.830 0.870 0.920 RG
+0.6 w
+48 312 516 31 re B
+0.830 0.870 0.920 RG
+0.4 w 176 312 m 176 343 l S
+0.830 0.870 0.920 RG
+0.4 w 222 312 m 222 343 l S
+0.830 0.870 0.920 RG
+0.4 w 276 312 m 276 343 l S
+0.120 0.160 0.230 rg
+BT /F2 7.5 Tf 1 0 0 1 54.00 331.00 Tm (QA and PM evidence) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.8 Tf 1 0 0 1 184.00 327.00 Tm (5%) Tj ET
+0.150 0.360 0.780 rg
+BT /F2 7.8 Tf 1 0 0 1 230.00 327.00 Tm (0%) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 332.00 Tm (No acceptance results, interview notes, prototype study, usability) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 7.2 Tf 1 0 0 1 282.00 323.00 Tm (measures, iteration record or case study found in repo.) Tj ET
+0.900 0.940 0.990 rg
+0.830 0.870 0.920 RG
+0.6 w
+48 285 516 27 re B
+0.055 0.105 0.220 rg
+BT /F2 8.0 Tf 1 0 0 1 56.00 295.00 Tm (WEIGHTED TOTAL) Tj ET
+0.055 0.105 0.220 rg
+BT /F2 8.0 Tf 1 0 0 1 184.00 295.00 Tm (100%) Tj ET
+0.150 0.360 0.780 rg
+BT /F2 8.0 Tf 1 0 0 1 230.00 295.00 Tm (26%) Tj ET
+0.360 0.410 0.490 rg
+BT /F1 8.0 Tf 1 0 0 1 48.00 312.00 Tm (The estimate is conservative because privacy, source verification and end-to-end task success are acceptance) Tj ET
+0.360 0.410 0.490 rg
+BT /F1 8.0 Tf 1 0 0 1 48.00 301.50 Tm (requirements, not optional polish.) Tj ET
+
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 9 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 5711 >>
+stream
+0.055 0.105 0.220 rg
+0 742 612 50 re f
+1.000 1.000 1.000 rg
+BT /F2 10.5 Tf 1 0 0 1 42.00 765.00 Tm (UP SCHOLARSHIP COPILOT) Tj ET
+0.830 0.880 0.960 rg
+BT /F1 7.2 Tf 1 0 0 1 42.00 750.00 Tm (PROJECT PROGRESS REVIEW  |  17 NOVEMBER 2026) Tj ET
+1.000 1.000 1.000 rg
+BT /F2 9.0 Tf 1 0 0 1 545.00 759.00 Tm (3) Tj ET
+0.830 0.870 0.920 rg
+42 38 528 0.8 re f
+0.360 0.410 0.490 rg
+BT /F1 7.2 Tf 1 0 0 1 42.00 24.00 Tm (Source: UP Scholarship Copilot Final MVP and PM Validation Brief) Tj ET
+0.360 0.410 0.490 rg
+BT /F1 7.2 Tf 1 0 0 1 558.00 24.00 Tm (3) Tj ET
+0.055 0.105 0.220 rg
+BT /F2 20.0 Tf 1 0 0 1 48.00 713.00 Tm (What is working and what remains) Tj ET
+0.055 0.105 0.220 rg
+BT /F2 13.0 Tf 1 0 0 1 48.00 678.00 Tm (Implemented foundations) Tj ET
+0.150 0.360 0.780 rg
+48 660 42 2 re f
+0.120 0.160 0.230 rg
+BT /F2 9.0 Tf 1 0 0 1 52.00 651.00 Tm (- Accounts and student workspace) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 639.00 Tm (Email/password registration/login, JWT session checks, profile create/update, role-specific navigation and) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 627.60 Tm (password reset workflow are present.) Tj ET
+0.120 0.160 0.230 rg
+BT /F2 9.0 Tf 1 0 0 1 52.00 611.20 Tm (- Document and coordinator operations) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 599.20 Tm (Nine fixed document types, file upload/update/delete, coordinator review and student notifications are) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 587.80 Tm (implemented.) Tj ET
+0.120 0.160 0.230 rg
+BT /F2 9.0 Tf 1 0 0 1 52.00 571.40 Tm (- Support features) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 559.40 Tm (Students can submit coordinator queries, see replies and notifications, and use streamed chat with saved) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 548.00 Tm (conversations.) Tj ET
+0.055 0.105 0.220 rg
+BT /F2 13.0 Tf 1 0 0 1 48.00 524.60 Tm (Critical blockers before pilot) Tj ET
+0.150 0.360 0.780 rg
+48 506.60000000000014 42 2 re f
+0.650 0.160 0.160 rg
+BT /F2 9.0 Tf 1 0 0 1 52.00 497.60 Tm (- P0 - Close document exposure paths) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 485.60 Tm (Require authentication and ownership checks on every document route; remove arbitrary unauthenticated) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 474.20 Tm (user_id lookup; stop serving uploads through a public static mount; and remove default admin access to) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 462.80 Tm (files. Review existing uploads and revoke exposed links.) Tj ET
+0.650 0.160 0.160 rg
+BT /F2 9.0 Tf 1 0 0 1 52.00 446.40 Tm (- P1 - Reduce sensitive data handling) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 434.40 Tm (The document schema stores Aadhaar and bank account numbers and the API returns document metadata. Minimize) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 423.00 Tm (these fields, mask them where possible, and limit retrieval to the student unless the student explicitly) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 411.60 Tm (authorizes review.) Tj ET
+0.120 0.160 0.230 rg
+BT /F2 9.0 Tf 1 0 0 1 52.00 395.20 Tm (- P1 - Build the readiness journey) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 383.20 Tm (Add Fresh/Renewal selection, route-specific requirements, checklist states including expiring/not) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 371.80 Tm (applicable, manual stage tracking with next action, and reminders tied to verified dates.) Tj ET
+0.120 0.160 0.230 rg
+BT /F2 9.0 Tf 1 0 0 1 52.00 355.40 Tm (- P1 - Make guidance verifiable) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 343.40 Tm (Create admin-managed notices/requirements with source URL, last-verified date and archive/version state.) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 332.00 Tm (Ground assistant answers in that content, cite it and abstain when evidence is missing.) Tj ET
+0.120 0.160 0.230 rg
+BT /F2 9.0 Tf 1 0 0 1 52.00 315.60 Tm (- P2 - Validate and document outcomes) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 303.60 Tm (Run task-based checks for profile/route, vault, checklist, stage, issue resolution, mobile use, access) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.6 Tf 1 0 0 1 64.00 292.20 Tm (control and deletion. Capture research, results, one evidence-based iteration and case-study evidence.) Tj ET
+0.055 0.105 0.220 rg
+BT /F2 13.0 Tf 1 0 0 1 48.00 268.80 Tm (Deployment note) Tj ET
+0.150 0.360 0.780 rg
+48 250.8000000000004 42 2 re f
+0.120 0.160 0.230 rg
+BT /F1 8.3 Tf 1 0 0 1 48.00 241.80 Tm (The Render log supplied by the owner shows DATABASE_URL resolving to localhost:5432 and refusing connection. Set the) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.3 Tf 1 0 0 1 48.00 230.80 Tm (backend service variable to its PostgreSQL service connection URL. localhost is the web-service container, not the) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.3 Tf 1 0 0 1 48.00 219.80 Tm (database. This environment issue is separate from the code score.) Tj ET
+0.055 0.105 0.220 rg
+BT /F2 13.0 Tf 1 0 0 1 48.00 196.80 Tm (Review scope and limits) Tj ET
+0.150 0.360 0.780 rg
+48 178.8000000000004 42 2 re f
+0.120 0.160 0.230 rg
+BT /F1 8.0 Tf 1 0 0 1 48.00 169.80 Tm (Static review of repository source and deployment notes against the original brief on 17 November 2026. No project files) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.0 Tf 1 0 0 1 48.00 159.30 Tm (were changed and no tests were run for this report. The review does not inspect live Render settings or external) Tj ET
+0.120 0.160 0.230 rg
+BT /F1 8.0 Tf 1 0 0 1 48.00 148.80 Tm (research/prototype artifacts. ìNot foundî means not evidenced in the checked repository.) Tj ET
+
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 9 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Type /Pages /Count 3 /Kids [4 0 R 6 0 R 8 0 R] >>
+endobj
+10 0 obj
+<< /Type /Catalog /Pages 9 0 R >>
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000015 00000 n 
+0000000112 00000 n 
+0000000214 00000 n 
+0000004751 00000 n 
+0000004887 00000 n 
+0000013814 00000 n 
+0000013950 00000 n 
+0000019713 00000 n 
+0000019849 00000 n 
+0000019918 00000 n 
+trailer
+<< /Size 11 /Root 10 0 R >>
+startxref
+19968
+%%EOF

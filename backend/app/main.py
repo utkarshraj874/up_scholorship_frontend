@@ -1,5 +1,6 @@
 import os
 import sys
+import logging
 from pathlib import Path
 from contextlib import asynccontextmanager
 
@@ -20,6 +21,9 @@ from backend.app.api.admin import router as admin_router
 from backend.app.api.notifications import router as notifications_router
 from backend.app.api.help_desk import router as help_desk_router
 from backend.app.api.password_reset import router as password_reset_router
+from backend.app.api.chat import router as chat_router
+
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
@@ -73,29 +77,26 @@ app.include_router(admin_router)
 app.include_router(notifications_router)
 app.include_router(help_desk_router)
 app.include_router(password_reset_router)
+app.include_router(chat_router)
 
 
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception):
-    import traceback
-    traceback.print_exc()
-    origin = request.headers.get("origin")
-    headers = {}
-    if origin:
-        headers["Access-Control-Allow-Origin"] = origin
-        headers["Access-Control-Allow-Credentials"] = "true"
-        headers["Access-Control-Allow-Headers"] = "*"
-        headers["Access-Control-Allow-Methods"] = "*"
+    logger.exception("Unhandled request error", exc_info=exc)
     return JSONResponse(
         status_code=500,
-        content={"detail": f"Database / Server error: {str(exc)}"},
-        headers=headers,
+        content={"detail": "An unexpected server error occurred."},
     )
 
 
 @app.get("/health")
 def health_check():
     info = {"status": "ok", "portal": "UP Scholarship Copilot - IIIT Ranchi"}
+    from backend.app.core.config import GROQ_API_KEY, GROQ_MODEL
+
+    info["chatbot_status"] = "configured" if GROQ_API_KEY else "missing_groq_api_key"
+    info["chatbot_model"] = GROQ_MODEL
+
     try:
         from backend.app.core.config import DATABASE_URL
         from backend.app.core.database import engine
@@ -113,6 +114,9 @@ def health_check():
                 info["database_status"] = "connected"
                 inspector = inspect(engine)
                 info["tables"] = inspector.get_table_names()
+                info["profile_schema_status"] = (
+                    "ready" if "profiles" in info["tables"] else "missing_profiles_table"
+                )
     except Exception as e:
         info["database_status"] = "error"
         info["database_error"] = str(e)
