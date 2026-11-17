@@ -293,16 +293,26 @@ button, input, select, textarea {
   background: #ffffff;
 }
 
+.modal-container > form {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .modal-body {
   padding: 24px;
   overflow-y: auto;
   flex: 1;
+  min-height: 0;
 }
 
 .modal-footer {
   padding: 16px 24px;
   border-top: 1px solid var(--border);
   display: flex;
+  flex: 0 0 auto;
   justify-content: flex-end;
   gap: 12px;
   background-color: var(--surface-alt);
