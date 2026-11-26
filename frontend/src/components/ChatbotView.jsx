@@ -1,27 +1,41 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   Bot,
+  FileText,
   MessageSquare,
   Plus,
-  Send,
+  ShieldCheck,
   Sparkles,
   Trash2,
-  UserRound,
+  UserRoundCheck,
   X,
 } from 'lucide-react';
 import { api } from '../services/api';
+import ChatInput from './ChatInput';
+import ChatMessage from './ChatMessage';
 
 const suggestions = [
-  'Which documents should I prepare?',
-  'How do I keep my scholarship profile ready?',
-  'Where can I verify official application details?',
+  { icon: FileText, label: 'Documents', prompt: 'What documents are required for the UP Scholarship application?' },
+  { icon: UserRoundCheck, label: 'Eligibility', prompt: 'Am I eligible for this scholarship?' },
+  { icon: Sparkles, label: 'How to apply', prompt: 'How do I apply for the scholarship?' },
+  { icon: ShieldCheck, label: 'Application status', prompt: 'How can I check my application status?' },
 ];
+function readSavedRatings(storageKey) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+    return saved && typeof saved === 'object' ? saved : {};
+  } catch {
+    return {};
+  }
+}
 
-export default function ChatbotView({ onShowToast }) {
+export default function ChatbotView({ user, onShowToast }) {
+  const feedbackStorageKey = `scholarship_chat_feedback:${user?.id ?? user?.email ?? 'current'}`;
   const [conversations, setConversations] = useState([]);
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [draft, setDraft] = useState('');
+  const [ratings, setRatings] = useState(() => readSavedRatings(feedbackStorageKey));
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
@@ -44,9 +58,7 @@ export default function ChatbotView({ onShowToast }) {
           }
         }
       } catch (err) {
-        if (!cancelled) {
-          setError(err.message || 'Could not load your chat history.');
-        }
+        if (!cancelled) setError(err.message || 'Could not load your chat history.');
       } finally {
         if (!cancelled) setLoadingHistory(false);
       }
@@ -62,7 +74,7 @@ export default function ChatbotView({ onShowToast }) {
     messagesEnd.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [messages]);
 
-  const startConversation = async () => {
+  const startConversation = () => {
     setError('');
     setHistoryOpen(false);
     if (sending) return;
@@ -166,14 +178,62 @@ export default function ChatbotView({ onShowToast }) {
 
   const stopResponse = () => abortController.current?.abort();
 
+  const copyResponse = async (message) => {
+    try {
+      let copied = false;
+      if (navigator.clipboard?.writeText) {
+        try {
+          await navigator.clipboard.writeText(message.content);
+          copied = true;
+        } catch {
+          // Fall back for browsers that expose clipboard access but deny it here.
+        }
+      }
+      if (!copied) {
+        const temporaryInput = document.createElement('textarea');
+        temporaryInput.value = message.content;
+        temporaryInput.setAttribute('readonly', '');
+        temporaryInput.style.position = 'fixed';
+        temporaryInput.style.opacity = '0';
+        document.body.appendChild(temporaryInput);
+        temporaryInput.select();
+        copied = document.execCommand('copy');
+        temporaryInput.remove();
+      }
+      if (!copied) throw new Error('Clipboard access is unavailable');
+      onShowToast?.({ type: 'success', message: 'Response copied to clipboard.' });
+    } catch {
+      onShowToast?.({ type: 'error', message: 'Could not copy this response.' });
+    }
+  };
+
+  const rateResponse = (messageId, rating) => {
+    setRatings((current) => {
+      const next = { ...current };
+      const key = String(messageId);
+      if (next[key] === rating) delete next[key];
+      else next[key] = rating;
+      try {
+        localStorage.setItem(feedbackStorageKey, JSON.stringify(next));
+      } catch {
+        // Keep the current selection usable when browser storage is unavailable.
+      }
+      return next;
+    });
+  };
+
+  const chooseSuggestion = (prompt) => {
+    setDraft(prompt);
+  };
+
   return (
     <section className="chat-page" aria-label="Scholarship assistant">
       <header className="chat-page-header">
         <div className="chat-heading-icon"><Bot size={23} /></div>
-        <div>
+        <div className="chat-page-heading-copy">
           <span className="chat-eyebrow"><Sparkles size={13} /> AI scholarship support</span>
           <h1>Scholarship assistant</h1>
-          <p>Ask general questions about preparing your UP Scholarship application.</p>
+          <p>Clear, practical guidance for your UP Scholarship application.</p>
         </div>
         <button
           type="button"
@@ -245,72 +305,52 @@ export default function ChatbotView({ onShowToast }) {
 
         <div className="chat-panel">
           <div className="chat-messages" aria-live="polite" aria-relevant="additions text">
-            {messages.length === 0 ? (
+            {loadingHistory && messages.length === 0 ? (
+              <div className="chat-loading-state" role="status">Loading your scholarship assistant…</div>
+            ) : messages.length === 0 ? (
               <div className="chat-welcome">
                 <div className="chat-welcome-mark"><Bot size={30} /></div>
+                <span className="chat-welcome-kicker">Your scholarship guide</span>
                 <h2>How can I help you prepare?</h2>
-                <p>Ask a general question about documents, profile preparation, or where to find official guidance.</p>
+                <p>Get help organizing your application, understanding documents, and finding official guidance.</p>
                 <div className="chat-suggestions">
-                  {suggestions.map((suggestion) => (
+                  {suggestions.map(({ icon: Icon, label, prompt }) => (
                     <button
                       type="button"
-                      key={suggestion}
-                      onClick={() => setDraft(suggestion)}
+                      className="chat-suggestion-card"
+                      key={label}
+                      onClick={() => chooseSuggestion(prompt)}
                       disabled={sending}
                     >
-                      {suggestion}
+                      <Icon size={17} />
+                      <span><strong>{label}</strong><small>{prompt}</small></span>
                     </button>
                   ))}
                 </div>
               </div>
             ) : (
               messages.map((message) => (
-                <article
-                  className={`chat-message chat-message-${message.role}`}
+                <ChatMessage
+                  message={message}
                   key={message.id}
-                >
-                  <span className="chat-message-avatar">
-                    {message.role === 'assistant' ? <Bot size={17} /> : <UserRound size={16} />}
-                  </span>
-                  <div className="chat-message-body">
-                    <strong>{message.role === 'assistant' ? 'Assistant' : 'You'}</strong>
-                    <p>{message.content || (sending ? 'Thinking…' : '')}</p>
-                  </div>
-                </article>
+                  rating={ratings[String(message.id)]}
+                  onCopy={copyResponse}
+                  onRate={rateResponse}
+                />
               ))
             )}
             {error && <div className="chat-error" role="alert">{error}</div>}
             <div ref={messagesEnd} />
           </div>
 
-          <form className="chat-composer" onSubmit={sendMessage}>
-            <label className="sr-only" htmlFor="chat-message">Your message</label>
-            <textarea
-              id="chat-message"
-              value={draft}
-              onChange={(event) => setDraft(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' && !event.shiftKey) {
-                  event.preventDefault();
-                  sendMessage();
-                }
-              }}
-              placeholder="Ask about scholarship preparation…"
-              rows={1}
-              maxLength={4000}
-              disabled={sending}
-            />
-            {sending ? (
-              <button type="button" className="chat-send-button chat-stop-button" onClick={stopResponse} aria-label="Stop response">
-                <X size={18} />
-              </button>
-            ) : (
-              <button type="submit" className="chat-send-button" disabled={!draft.trim()} aria-label="Send message">
-                <Send size={17} />
-              </button>
-            )}
-          </form>
-          <p className="chat-disclaimer">AI responses can be inaccurate. Verify requirements on the official scholarship portal.</p>
+          <ChatInput
+            draft={draft}
+            sending={sending}
+            onDraftChange={setDraft}
+            onSend={sendMessage}
+            onStop={stopResponse}
+          />
+          <p className="chat-disclaimer">AI responses may be inaccurate. Verify deadlines and requirements on the official scholarship portal.</p>
         </div>
       </div>
     </section>
