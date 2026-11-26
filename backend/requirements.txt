@@ -39,5 +39,5 @@ storage3==2.32.0
 supabase==2.32.0
 uvicorn==0.48.0
 langchain-core>=1.0,<2.0
-langchain-groq>=1.0,<2.0
+langchain-google-genai>=3.0,<4.0
 langgraph>=1.0,<2.0

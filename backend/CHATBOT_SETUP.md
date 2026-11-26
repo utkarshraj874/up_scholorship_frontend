@@ -1,6 +1,6 @@
 # Scholarship assistant deployment
 
-The chatbot runs on the FastAPI service. Keep the Groq credential on the backend; do not add it to a `VITE_*` frontend variable.
+The chatbot runs on the FastAPI service. Keep the Gemini credential on the backend; do not add it to a `VITE_*` frontend variable.
 
 ## Local development
 
@@ -32,20 +32,19 @@ Set these environment variables for the backend service:
 - `DATABASE_URL` — Render PostgreSQL connection URL used by both the API and Alembic migrations.
 - `SECRET_KEY` — a long, random secret used for authentication and reset-code hashing; replace any development default.
 - `ADMIN_REGISTRATION_KEY` — a long, private key required to create admin accounts. Configure it only on the backend (Render environment and local `backend/.env`); never add it to Vercel or frontend variables.
-- `GROQ_API_KEY` — API key from Groq.
-- `GROQ_MODEL` — optional; defaults to `openai/gpt-oss-120b`. If this is set in Render, use a model ID currently enabled for your Groq account.
+- `GEMINI_API_KEY` — API key from Google AI Studio or a compatible Gemini API provider.
+- `GEMINI_MODEL` — optional; defaults to `gemini-3.8-flash`. Use a model currently enabled for the API key.
 - `BACKEND_URL` — optional public API base URL used for locally stored file links; defaults to Render's `RENDER_EXTERNAL_URL` or `http://localhost:8000`.
 - `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `SUPABASE_BUCKET` — configure persistent document storage. The bucket defaults to `documents`.
 - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` — required to deliver password-reset codes.
 - `SMTP_TLS` — optional; defaults to `true`.
 
-Set `GROQ_API_KEY` in the **Render backend service** environment, not in the
+Set `GEMINI_API_KEY` in the **Render backend service** environment, not in the
 Vercel project. After saving the value, redeploy/restart the backend. The
 backend's `/health` response reports `chatbot_status` as either
-`configured` or `missing_groq_api_key` without returning the secret. It also
+`configured` or `missing_gemini_api_key` without returning the secret. It also
 reports the selected model as `chatbot_model` and whether the profiles table
-is present as `profile_schema_status`. Groq retired `llama-3.3-70b-versatile`
-for free and developer-tier usage on August 16, 2026; use a currently supported
+is present as `profile_schema_status`.
 model such as `openai/gpt-oss-120b`.
 
 With the frontend and backend in this repository, configure Render with the repository root as its Root Directory and use:
@@ -83,4 +82,4 @@ All routes require the existing bearer token:
 - `DELETE /chat/conversations/{id}` — delete a conversation and its messages.
 - `POST /chat/conversations/{id}/messages/stream` — stream a response as Server-Sent Events; accepts `{"content":"..."}`. Token events contain `{"token":"..."}`, and a final `done` event contains the conversation ID.
 
-The chatbot endpoint returns a clear `503` response if `GROQ_API_KEY` is not configured. Password-reset responses do not disclose whether an email address is registered. Reset codes expire after 15 minutes, are stored as an HMAC digest, and can only be used once.
+The chatbot endpoint returns a clear `503` response if `GEMINI_API_KEY` is not configured. Password-reset responses do not disclose whether an email address is registered. Reset codes expire after 15 minutes, are stored as an HMAC digest, and can only be used once.

@@ -9,7 +9,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
-from backend.app.core.config import GROQ_API_KEY, GROQ_MODEL
+from backend.app.core.config import GEMINI_API_KEY, GEMINI_MODEL
 from backend.app.core.dependencies import get_current_user, get_db
 from backend.app.models.chat import ChatConversation, ChatMessage
 from backend.app.models.user import User
@@ -135,11 +135,11 @@ async def stream_message(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    if not GROQ_API_KEY:
+    if not GEMINI_API_KEY:
         raise HTTPException(
             status_code=503,
             detail=(
-                "The scholarship assistant is unavailable because GROQ_API_KEY "
+                "The scholarship assistant is unavailable because GEMINI_API_KEY "
                 "is not set on the backend. Add it to the Render backend service "
                 "environment (not Vercel) and redeploy."
             ),
@@ -171,7 +171,7 @@ async def stream_message(
 
     try:
         from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-        from langchain_groq import ChatGroq
+        from langchain_google_genai import ChatGoogleGenerativeAI
         from langgraph.graph import END, START, StateGraph
         from langgraph.graph.message import add_messages
     except ImportError as exc:
@@ -184,17 +184,44 @@ async def stream_message(
     class GraphState(TypedDict):
         messages: Annotated[list[Any], add_messages]
 
-    model = ChatGroq(model=GROQ_MODEL, api_key=GROQ_API_KEY, temperature=0.2)
+    model = ChatGoogleGenerativeAI(
+        model=GEMINI_MODEL,
+        google_api_key=GEMINI_API_KEY,
+        temperature=0.7,
+        max_tokens=1200,
+        max_retries=0,
+    )
+    student_name = (current_user.name or "").strip()
     prompt_messages: list[Any] = [
         SystemMessage(
             content=(
-                "You are a helpful assistant for students using the IIIT Ranchi UP "
-                "Scholarship facilitation portal. Give clear, concise guidance about "
-                "organizing application information and documents. Do not claim to "
-                "submit official applications, verify government records, or provide "
-                "legal/financial guarantees. Encourage users to verify deadlines and "
-                "official requirements on scholarship.up.gov.in. Do not ask users to "
-                "share passwords, OTPs, full Aadhaar numbers, or other sensitive IDs."
+                "You are an experienced and friendly scholarship mentor helping students "
+        "through the IIIT Ranchi UP Scholarship portal.\n\n"
+
+        "Your responses should feel like a caring senior or counselor, not a chatbot.\n\n"
+
+        "FORMAT RULES:\n"
+        "- Use markdown formatting.\n"
+        "- Use headings when useful.\n"
+        "- Use bullet points and numbered steps.\n"
+        "- Highlight important information using **bold text**.\n"
+        "- Use emojis sparingly to improve readability (✅ 📌 ⚠️).\n"
+        "- Keep answers visually attractive and easy to scan.\n"
+        "- Avoid large blocks of text.\n"
+        "- End with a helpful next action when appropriate.\n\n"
+
+        "COMMUNICATION STYLE:\n"
+        "- Reply in the same language as the student.\n"
+        "- Sound natural and conversational.\n"
+        "- Don't say 'As an AI'.\n"
+        "- Don't sound like a government notice.\n"
+        "- Explain things simply.\n"
+        "- Be encouraging and student-friendly.\n\n"
+
+        "SAFETY:\n"
+        "- Never ask for passwords, OTPs, Aadhaar numbers.\n"
+        "- Never guarantee scholarship approval.\n"
+        "- Encourage checking official deadlines on scholarship.up.gov.in.\n"
             )
         )
     ]
@@ -235,10 +262,19 @@ async def stream_message(
     async def produce_response() -> None:
         try:
             await graph.ainvoke({"messages": prompt_messages})
-        except Exception:
+        except Exception as exc:
             logger.exception("Scholarship assistant request failed")
+            error_text = str(exc).lower()
+            if "429" in error_text or "resource_exhausted" in error_text or "quota" in error_text:
+                message = "Gemini has reached its current quota or rate limit. Please wait and try again."
+            elif "404" in error_text or "not found" in error_text:
+                message = "The configured Gemini model is unavailable. Please update GEMINI_MODEL."
+            elif "api key" in error_text or "401" in error_text or "403" in error_text:
+                message = "The Gemini API key is invalid or not authorized."
+            else:
+                message = "The assistant could not complete this response. Please try again."
             await token_queue.put(
-                ("error", "The assistant could not complete this response. Please try again.")
+                ("error", message)
             )
         finally:
             await token_queue.put(None)

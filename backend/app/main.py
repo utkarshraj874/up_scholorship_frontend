@@ -91,10 +91,10 @@ async def generic_exception_handler(request: Request, exc: Exception):
 @app.get("/health")
 def health_check():
     info = {"status": "ok", "portal": "UP Scholarship Copilot - IIIT Ranchi"}
-    from backend.app.core.config import GROQ_API_KEY, GROQ_MODEL
+    from backend.app.core.config import GEMINI_API_KEY, GEMINI_MODEL
 
-    info["chatbot_status"] = "configured" if GROQ_API_KEY else "missing_groq_api_key"
-    info["chatbot_model"] = GROQ_MODEL
+    info["chatbot_status"] = "configured" if GEMINI_API_KEY else "missing_gemini_api_key"
+    info["chatbot_model"] = GEMINI_MODEL
 
     try:
         from backend.app.core.config import DATABASE_URL
